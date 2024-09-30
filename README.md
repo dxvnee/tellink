@@ -8,8 +8,8 @@ Fitur aplikasi :
 - Upload berkas pendukung
 
 ### Susunan Tim
-| NIM        | Nama            | Username Github |
-|------------|-----------------|-----------------|
-| 6706223121 | Eigiya Daramuli Kale | dxvnee |
-| 6706223 |  |  |
-| 6706223 |  | |
+| NIM        | Nama                 | Username Github |
+|------------|----------------------|-----------------|
+| 6706223121 | Eigiya Daramuli Kale | dxvnee          |
+| 6706223    |                      |                 |
+| 6706223164 | Dzikri Abdu Rahman   | dziryizami      |
