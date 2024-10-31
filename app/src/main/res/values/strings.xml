@@ -1,3 +1,27 @@
 <resources>
-    <string name="app_name">Tellink</string>
+    <string name="app_name">TelkomUniversityLink</string>
+    <string name="tellink">Tellink.</string>
+    <string name="login">Login</string>
+    <string name="nim">NIM :</string>
+    <string name="email">E-mail :</string>
+    <string name="enter_nim">Enter NIM here:</string>
+    <string name="enter_email">Enter e-mail here:</string>
+    <string name="enter_password">Enter Password here:</string>
+    <string name="password">Password :</string>
+    <string name="confirm_password">Confirm :</string>
+    <string name="login_bold">LOGIN</string>
+    <string name="login_title">Log in to </string>
+    <string name="register_bold">REGISTER</string>
+    <string name="register_title">Register to </string>
+    <string name="dont_have_account">Not have account? </string>
+    <string name="have_account">Have account? </string>
+    <string name="register">Register!</string>
+
+    //Home
+    <string name="welcome">Welcome, Egia</string>
+    <string name="recenty">Recently Hot</string>
+    <string name="konten_seminar">Seminar Workshop IoT 2023 Seminar Workshop IoT 2023</string>
+    <string name="why">Why Telkom University Link?</string>
+    <string name="facts">Telkom University Facts:</string>
+    <string name="konten_why">“Telkom University Link is made spesific for Telkom University student, it can provide you lots of knownledge and experience with our features, no need to worry about your career we can discuss it here.”</string>
 </resources>
