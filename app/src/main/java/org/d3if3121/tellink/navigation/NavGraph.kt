@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import org.d3if3121.tellink.ui.screen.HomePage
 import org.d3if3121.tellink.ui.screen.LoginPage
 import org.d3if3121.tellink.ui.screen.RegisterPage
 import org.d3if3121.tellink.viewmodel.UserViewModel
@@ -16,7 +17,7 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()){
 
     NavHost(
         navController = navController,
-        startDestination = Screen.Login.route
+        startDestination = Screen.Home.route
     ) {
         composable(route = Screen.Login.route){
             LoginPage(navController)
@@ -24,6 +25,10 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()){
 
         composable(route = Screen.Register.route){
             RegisterPage(navController)
+        }
+
+        composable(route = Screen.Home.route){
+            HomePage(navController)
         }
     }
 }
