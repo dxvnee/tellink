@@ -215,6 +215,7 @@ fun RegisterPage(
                                 nim = input
                             },
                             keyboardType = KeyboardType.Number,
+                            modifier = Modifier.fillMaxWidth()
                         )
                     }
                 }
@@ -294,6 +295,7 @@ fun RegisterPage(
                                 email = input
                             },
                             keyboardType = KeyboardType.Text,
+                            modifier = Modifier.fillMaxWidth()
                         )
 
                     }

@@ -8,6 +8,8 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import org.d3if3121.tellink.ui.screen.HomePage
 import org.d3if3121.tellink.ui.screen.LoginPage
+import org.d3if3121.tellink.ui.screen.ProfilePage
+import org.d3if3121.tellink.ui.screen.ProjectPage
 import org.d3if3121.tellink.ui.screen.RegisterPage
 import org.d3if3121.tellink.viewmodel.UserViewModel
 
@@ -29,6 +31,14 @@ fun SetupNavGraph(navController: NavHostController = rememberNavController()){
 
         composable(route = Screen.Home.route){
             HomePage(navController)
+        }
+
+        composable(route = Screen.Project.route){
+            ProjectPage(navController)
+        }
+
+        composable(route = Screen.Profile.route){
+            ProfilePage(navController)
         }
     }
 }
