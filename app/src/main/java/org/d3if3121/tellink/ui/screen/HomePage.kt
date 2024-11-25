@@ -13,6 +13,7 @@ import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -22,6 +23,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
@@ -96,9 +98,24 @@ import org.d3if3121.tellink.ui.theme.Warna
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ModifierInfo
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
+import androidx.navigation.compose.currentBackStackEntryAsState
 import kotlinx.coroutines.flow.debounce
 import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.launch
+import org.d3if3121.tellink.navigation.BottomBarScreen
+import androidx.compose.material.BottomNavigation
+import androidx.compose.material.BottomNavigationItem
+import androidx.compose.material.ContentAlpha
+import androidx.compose.material.LocalContentColor
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.Search
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.CardElevation
+import androidx.compose.ui.text.style.TextAlign
 
 @Composable
 fun ObserveScrollState(lazyListState: LazyListState) : Boolean{
@@ -121,7 +138,7 @@ fun cekScroll(lazyListState: LazyListState) : Boolean{
     var isScrolled by remember { mutableStateOf(false) }
 
     LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.firstVisibleItemIndex > 5 }
+        snapshotFlow { lazyListState.firstVisibleItemIndex > 0 }
             .distinctUntilChanged()
             .debounce(80)
             .collect {
@@ -160,8 +177,6 @@ fun HomePagePreview() {
 
 
 val TOP_BAR_HEIGHT = 100.dp
-val LazyListState.isScrolled: Boolean
-    get() = firstVisibleItemIndex > 5
 
 @Composable
 fun TombolGambar(
@@ -180,90 +195,174 @@ fun TombolGambar(
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TopBar(lazyListState: LazyListState){
-    TopAppBar(
-        title = {
-            Row(
-                horizontalArrangement = Arrangement.Start,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.fillMaxWidth().padding(top = 10.dp)
-            ) {
-                Column (
-                    modifier = Modifier.padding(end = 10.dp)
-                ){
-                    Image(
-                        painter = painterResource(id = R.drawable.photo),
-                        contentDescription = "App logo",
-                        modifier = Modifier
-                            .size(45.dp)
-                    )
-                }
+fun TopBar(
+    lazyListState: LazyListState,
+    helloActive: Boolean,
+    profileActive: Boolean = false,
+    TOP_BAR_ZERO: Int = 0,
+    search: String = "",
+    onSearchChange: (String) -> Unit = {}
+){
+    if (profileActive == true){
 
-                Column (
-                    modifier = Modifier.offset(y = -6.dp)
-                ){
-                    Text(
-                        text = "Hello,",
-                        color = Warna.MerahNormal,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.offset(y = 5.dp)
-                    )
-                    
-                    Text(
-                        text = "Eigiya Daramuli Kale",
-                        color = Warna.HitamNormal,
-                        fontSize = 17.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                        modifier = Modifier.offset(y = -4.dp)
-                    )
-                }
-                Row (
-                    horizontalArrangement = Arrangement.End,
-                    modifier = Modifier.fillMaxWidth().padding(end = 5.dp)
-                ){
-                    TombolGambar(
-                        painterResource(id = R.drawable.notifications),
-                        26
+        TopAppBar(
+            title = {
+                Row(
+                    horizontalArrangement = Arrangement.Start,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(top = 10.dp)
+                ) {
+                    Column (
+                        horizontalAlignment = Alignment.Start,
                     ){
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.offset(x = -12.dp)
+                        ){
+                            Icon(
+                                modifier = Modifier.size(30.dp),
+                                imageVector = Icons.Default.ArrowBack,
+                                contentDescription = "eheh",
+                                tint = Warna.AbuTua
+                            )
+                        }
 
                     }
-                    TombolGambar(
-                        painterResource(id = R.drawable.chat),
-                        26
+                    Column (
+
                     ){
+                        InputPutihSearchProfile(
+                            input = search,
+                            placeholder = stringResource(id = R.string.search),
+                            onInputChange = onSearchChange,
+                            keyboardType = KeyboardType.Text,
+                            modifier = Modifier.fillMaxWidth()
+                                .padding( end = 17.dp).height(40.dp),
+                            fontSize = 15
+
+                        )
+                    }
+
+
+                }
+            },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = Warna.PutihNormal,
+                titleContentColor = Warna.PutihNormal
+            ),
+            modifier = Modifier
+                .background(color = Warna.PutihNormal).padding(top = 0.dp)
+                .height(height = 100.dp)
+        )
+    } else {
+        TopAppBar(
+            title = {
+                Column() {
+                    Row(
+                        horizontalArrangement = Arrangement.Start,
+                        verticalAlignment = Alignment.CenterVertically,
+                        modifier = Modifier.fillMaxWidth()
+                    ) {
+                        Column (
+                            modifier = Modifier
+                        ){
+                            Image(
+                                painter = painterResource(id = R.drawable.photo),
+                                contentDescription = "App logo",
+                                modifier = Modifier
+                                    .size(45.dp)
+                            )
+                        }
+
+                        Column (
+
+                        ){
+                            if (helloActive == true) {
+                                Text(
+                                    text = "Hello,",
+                                    color = Warna.MerahNormal,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.Normal,
+                                    modifier = Modifier.offset(y = 5.dp)
+                                )
+                                Text(
+                                    text = "Eigiya Daramuli Kale",
+                                    color = Warna.HitamNormal,
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.offset(y = -4.dp)
+                                )
+                            } else {
+                                Text(
+                                    text = "Eigiya Daramuli Kale",
+                                    color = Warna.HitamNormal,
+                                    fontSize = 17.sp,
+                                    fontWeight = FontWeight.ExtraBold,
+                                    modifier = Modifier.offset(y = 5.dp)
+                                )
+                                Text(
+                                    text = "6706223121",
+                                    color = Warna.AbuTua,
+                                    fontSize = 15.sp,
+                                    fontWeight = FontWeight.SemiBold,
+                                    modifier = Modifier.offset(y = -4.dp)
+                                )
+                            }
+
+
+
+
+                        }
+                        Row (
+                            horizontalArrangement = Arrangement.End,
+                            modifier = Modifier.fillMaxWidth()
+                        ){
+                            TombolGambar(
+                                painterResource(id = R.drawable.notifications),
+                                26
+                            ){
+
+                            }
+                            TombolGambar(
+                                painterResource(id = R.drawable.chat),
+                                26
+                            ){
+
+                            }
+                        }
 
                     }
+
+                    Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(Warna.MerahNormal).padding(10.dp))
                 }
 
-            }
-        },
-        colors = TopAppBarDefaults.mediumTopAppBarColors(
-            containerColor = Warna.PutihNormal,
-            titleContentColor = Warna.PutihNormal
-        ),
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = Warna.PutihNormal)
-            .animateContentSize(animationSpec =  tween(
-                durationMillis = 100,
-                delayMillis = 200,
-                easing = LinearOutSlowInEasing
-            ))
-            .height(height =
+            },
+            colors = TopAppBarDefaults.mediumTopAppBarColors(
+                containerColor = Warna.PutihNormal,
+                titleContentColor = Warna.PutihNormal
+            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(color = Warna.PutihNormal)
+                .animateContentSize(animationSpec =  tween(
+                    durationMillis = 500,
+                ))
+                .height(height =
                 if (cekScroll(lazyListState)){
-                    0.dp
+                    TOP_BAR_ZERO.dp
                     if (ScrollDirectionDetector(lazyListState) == "Up" && ObserveScrollState(lazyListState)){
                         Log.d("cekFlow", ObserveScrollState(lazyListState).toString())
                         TOP_BAR_HEIGHT
                     } else {
-                        0.dp
+                        TOP_BAR_ZERO.dp
                     }
                 } else {
                     TOP_BAR_HEIGHT
                 }
-            ),
-    )
+                ),
+        )
+    }
+
 
 }
 
@@ -274,23 +373,222 @@ fun MainContent(
 ) {
     val numbers = remember { List(size = 200){ it } }
     val padding by animateDpAsState(
-        targetValue = if (lazyListState.isScrolled) 0.dp else TOP_BAR_HEIGHT,
+        targetValue = if (cekScroll(lazyListState)) 0.dp else TOP_BAR_HEIGHT,
         animationSpec = tween(
             durationMillis = 500,
-            easing = LinearOutSlowInEasing
+
+
         )
     )
+    var search by remember { mutableStateOf("") }
 
-    LazyColumn(
-        modifier = Modifier.padding(top = padding),
-        state = lazyListState
-    ){
-        items(
-            items = numbers,
-            key = { it }
+    Column(
+        modifier = Modifier.padding(start = 17.dp, end = 17.dp).background(color = Warna.PutihNormal)
+    ) {
+
+        LazyColumn(
+            modifier = Modifier.padding(top = padding).fillMaxWidth().fillMaxHeight(),
+            state = lazyListState
         ){
-            NumberHolder(number = it)
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    text = "Welcome to Tellink",
+                    color = Warna.MerahNormal,
+                    fontSize = 21.sp,
+                    fontWeight = FontWeight.ExtraBold,
+
+                )
+            }
+            item {
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.Start,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = 17.dp)
+
+                ){
+                    InputPutihSearch(
+                        input = search,
+                        placeholder = stringResource(id = R.string.search),
+                        onInputChange = { input ->
+                            search = input
+                        },
+                        keyboardType = KeyboardType.Number,
+                        modifier = Modifier.fillMaxWidth()
+                    )
+                }
+            }
+            items(100){
+                KartuKonten(
+                    fotoprofil = R.drawable.photo,
+                    nama = "Eigiya Daramuli Kale",
+                    jurusan = "D3 Rekayasa Perangkat Lunak Aplikasi",
+                    hari = "5 Days Ago",
+
+                    judul = "MAU NANYA DONGG",
+                    gambar = R.drawable.post1,
+                    konten = "Ini Kenapa kodingan Java aku error " +
+                            "ya guys, tolong bantuannya dong"
+                )
+                Spacer(modifier = Modifier.height(20.dp))
+            }
+
         }
+    }
+
+}
+
+
+@Composable
+fun KartuKonten(
+    fotoprofil: Int,
+    nama: String,
+    jurusan: String,
+    hari: String,
+
+    judul: String,
+    gambar: Int,
+    konten: String,
+){
+
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(500.dp),
+
+        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
+        shape = RoundedCornerShape(10.dp),
+        elevation = CardDefaults.cardElevation(6.dp)
+    ){
+        Column (
+            horizontalAlignment = Alignment.Start,
+            verticalArrangement = Arrangement.Top,
+            modifier = Modifier.padding(17.dp).fillMaxWidth().fillMaxHeight()
+        ){
+            Row (modifier = Modifier.padding(bottom = 17.dp).fillMaxWidth()){
+                Column (
+                    modifier = Modifier.padding(end = 10.dp),
+                    verticalArrangement = Arrangement.Center,
+                ){
+                    Image(
+                        painter = painterResource(id = fotoprofil),
+                        contentDescription = "App logo",
+                        modifier = Modifier
+                            .size(52.dp)
+                    )
+                }
+
+                Column {
+                    Text(
+                        text = nama,
+                        color = Warna.MerahNormal,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.ExtraBold,
+                    )
+                    Text(
+                        text = jurusan,
+                        color = Warna.AbuTua,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Normal,
+                        modifier = Modifier.offset(y = -3.dp)
+                    )
+                    Text(
+                        text = hari,
+                        color = Warna.AbuTua,
+                        fontSize = 15.sp,
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.offset(y = -8.dp)
+                    )
+
+                }
+
+            }
+            Text(
+                text = judul,
+                color = Warna.HitamNormal,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.padding(top = 9.dp, bottom = 5.dp)
+            )
+            Row(
+                modifier = Modifier.fillMaxWidth().padding(bottom = 17.dp)
+            ){
+                for (i in 1..3){
+                    Card(
+                        modifier = Modifier
+                            .padding(end = 7.dp)
+                            .width(80.dp)
+                            .height(30.dp),
+
+                        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
+                        shape = RoundedCornerShape(5.dp),
+                        border = BorderStroke(1.dp, Warna.MerahNormal)
+                    ){
+                        Column (
+                            verticalArrangement = Arrangement.Center,
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            modifier = Modifier.fillMaxSize()
+                        ){
+                            Text(
+                                text = "Android",
+                                color = Warna.MerahNormal,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                            )
+                        }
+                    }
+                }
+
+            }
+
+
+
+            Image(
+                painter = painterResource(gambar),
+                contentDescription = "Chat logo",
+                modifier = Modifier.fillMaxWidth()
+                    .clip(RoundedCornerShape(10.dp))
+            )
+
+            Text(
+                text = konten,
+                color = Warna.HitamNormal,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Normal,
+                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
+                textAlign = TextAlign.Justify
+            )
+            Column (
+                verticalArrangement = Arrangement.Bottom,
+                modifier = Modifier.fillMaxHeight()
+            ) {
+                ButtonMerah(
+                    onClick = {
+
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .size(46.dp),
+                    content = {
+                        Text(
+                            text = stringResource(id = R.string.request),
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 18.sp,
+                            color = Warna.PutihNormal
+                        )
+                    }
+                )
+            }
+
+
+
+        }
+
+
+
+
+
     }
 }
 
@@ -315,11 +613,76 @@ fun HomePage(
 
     Scaffold(
         topBar = {
-            TopBar(lazyListState = lazyListState)
+            TopBar(lazyListState = lazyListState, helloActive = true)
         },
         content = { paddingValues ->
             MainContent(lazyListState = lazyListState, paddingValues = paddingValues)
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
         }
+    )
+
+
+}
+
+
+@Composable
+fun BottomBar(navController: NavHostController){
+    val screens = listOf(
+        BottomBarScreen.BottomMenuPage,
+        BottomBarScreen.BottomSkillPage,
+        BottomBarScreen.BottomProfilePage,
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
+
+    BottomNavigation(
+        backgroundColor = Warna.MerahTua,
+        modifier = Modifier.height(70.dp)
+    ){
+        screens.forEach{ screen ->
+            AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
+        }
+    }
+
+}
+
+@Composable
+fun RowScope.AddItem(
+    screen: BottomBarScreen,
+    currentDestination: NavDestination?,
+    navController: NavHostController
+){
+    BottomNavigationItem (
+        modifier = Modifier.padding(top = 10.dp, bottom = 36.dp),
+        label = {
+            Text(
+                text = screen.title, color = Warna.PutihNormal,
+                fontSize = 15.sp,
+                fontWeight = FontWeight.Bold,
+            )
+        },
+        icon = {
+            Icon(
+                modifier = Modifier.size(65.dp)
+                    .padding(bottom =1.dp),
+                imageVector = screen.icon,
+                contentDescription = "eheh",
+                tint = Warna.PutihNormal
+            )
+        },
+        selected = currentDestination?.hierarchy?.any {
+            it.route == screen.route
+        } == true,
+        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
+        onClick = {
+            navController.navigate(screen.route){
+                popUpTo(navController.graph.findStartDestination().id)
+                launchSingleTop = true
+            }
+        }
+
     )
 
 
