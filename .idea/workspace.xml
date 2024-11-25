@@ -9,24 +9,8 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Membuat dynamic topappbar">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/BottomBarScreen.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProfilePage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProjectPage.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable-nodpi/header_2.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable-nodpi/post1.png" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/res/drawable/baseline_search_24.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" afterDir="false" />
+    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Selesai Frontend">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/NavGraph.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/NavGraph.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/Screen.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/Screen.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/RegisterPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/RegisterPage.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/theme/Theme.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/theme/Theme.kt" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -256,7 +240,15 @@
       <option name="project" value="LOCAL" />
       <updated>1731061537467</updated>
     </task>
-    <option name="localTasksCounter" value="6" />
+    <task id="LOCAL-00006" summary="Selesai Frontend">
+      <option name="closed" value="true" />
+      <created>1732496533457</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1732496533457</updated>
+    </task>
+    <option name="localTasksCounter" value="7" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -288,6 +280,7 @@
     <MESSAGE value="Ketua Melakukan Merge Branch" />
     <MESSAGE value="Pembuatan Login &amp; Register Page, dan Navigasi Aplikasi" />
     <MESSAGE value="Membuat dynamic topappbar" />
-    <option name="LAST_COMMIT_MESSAGE" value="Membuat dynamic topappbar" />
+    <MESSAGE value="Selesai Frontend" />
+    <option name="LAST_COMMIT_MESSAGE" value="Selesai Frontend" />
   </component>
 </project>
