@@ -495,7 +495,7 @@ fun LoginPage(
                     ) {
                         ButtonMerah(
                             onClick = {
-
+                                navController.navigate(Screen.Home.route)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()

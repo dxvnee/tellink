@@ -9,8 +9,15 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Selesai Frontend">
+    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Konfigurasi database Firebase">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model/Kelas.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model/Mahasiswa.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MahasiswaViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MainViewModel.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/ViewModelFactory.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -29,6 +36,12 @@
   <component name="ExternalProjectsManager">
     <system id="GRADLE">
       <state>
+        <task path="$PROJECT_DIR$">
+          <activation />
+        </task>
+        <task path="$PROJECT_DIR$/app">
+          <activation />
+        </task>
         <projects_view>
           <tree_state>
             <expand>
@@ -99,7 +112,7 @@
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dxvnee/Documents/EI/TUGAS/MOBPRO2/tubes-4601-pidizi/app/src/main/java/org/d3if3121/tellink/ui/screen&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dxvnee/Documents/EI/TUGAS/MOBPRO2/tubes-4601-pidizi/app/src/main/java/org/d3if3121/tellink/model&quot;,
     &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
@@ -117,9 +130,13 @@
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel" />
       <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
+      <recent name="org.d3if3121.tellink.ui.viewmodel" />
       <recent name="org.d3if3121.tellink.navigation" />
     </key>
   </component>
@@ -248,7 +265,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732496533457</updated>
     </task>
-    <option name="localTasksCounter" value="7" />
+    <task id="LOCAL-00007" summary="Konfigurasi database Firebase">
+      <option name="closed" value="true" />
+      <created>1732498537477</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1732498537477</updated>
+    </task>
+    <option name="localTasksCounter" value="8" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -281,6 +306,7 @@
     <MESSAGE value="Pembuatan Login &amp; Register Page, dan Navigasi Aplikasi" />
     <MESSAGE value="Membuat dynamic topappbar" />
     <MESSAGE value="Selesai Frontend" />
-    <option name="LAST_COMMIT_MESSAGE" value="Selesai Frontend" />
+    <MESSAGE value="Konfigurasi database Firebase" />
+    <option name="LAST_COMMIT_MESSAGE" value="Konfigurasi database Firebase" />
   </component>
 </project>
