@@ -201,7 +201,8 @@ fun TopBar(
     profileActive: Boolean = false,
     TOP_BAR_ZERO: Int = 0,
     search: String = "",
-    onSearchChange: (String) -> Unit = {}
+    onSearchChange: (String) -> Unit = {},
+    navController: NavHostController = rememberNavController()
 ){
     if (profileActive == true){
 
@@ -327,7 +328,7 @@ fun TopBar(
                                 painterResource(id = R.drawable.chat),
                                 26
                             ){
-
+                                navController.navigate(Screen.Login.route)
                             }
                         }
 
@@ -368,6 +369,7 @@ fun TopBar(
 
 @Composable
 fun MainContent(
+    navController: NavHostController,
     lazyListState: LazyListState,
     paddingValues: PaddingValues
 ) {
@@ -613,10 +615,10 @@ fun HomePage(
 
     Scaffold(
         topBar = {
-            TopBar(lazyListState = lazyListState, helloActive = true)
+            TopBar(lazyListState = lazyListState, helloActive = true, navController = navController)
         },
         content = { paddingValues ->
-            MainContent(lazyListState = lazyListState, paddingValues = paddingValues)
+            MainContent(navController = navController, lazyListState = lazyListState, paddingValues = paddingValues)
         },
         bottomBar = {
             BottomBar(navController = navController)
