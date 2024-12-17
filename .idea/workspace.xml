@@ -9,15 +9,38 @@
     <option name="autoReloadType" value="NONE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Konfigurasi database Firebase">
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model/Kelas.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model/Mahasiswa.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MahasiswaViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MainViewModel.kt" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/ViewModelFactory.kt" afterDir="false" />
+    <list default="true" id="061e0778-6b4c-42a6-a59b-bb4d393e91b6" name="Changes" comment="Membuat Struktur MVVM dengan Hilt (ViewModel, model, interface, response, repository)">
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/components/LoadingIndicator.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/core/Utils.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/model/MahasiswaLogin.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/BottomBar.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/Input.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/KartuKonten.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/KartuProfil.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/PilihanPutih.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/Tombol.kt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component/TopBar.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/caches/deviceStreaming.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/app/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/AndroidManifest.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/model/Mahasiswa.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/model/Mahasiswa.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/repository/MahasiswaListRepository.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/repository/MahasiswaListRepository.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/repository/interfaces/MahasiswaListInterface.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/repository/interfaces/MahasiswaListInterface.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/di/AppModule.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/di/AppModule.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/NavGraph.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/navigation/NavGraph.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/MainActivity.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/MainActivity.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/HomePage.kt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/LoginPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProfilePage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProfilePage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProjectPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/ProjectPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/RegisterPage.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen/RegisterPage.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MahasiswaListViewModel.kt" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel/MahasiswaListViewModel.kt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" beforeDir="false" afterPath="$PROJECT_DIR$/app/src/main/res/values/strings.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/build.gradle.kts" beforeDir="false" afterPath="$PROJECT_DIR$/build.gradle.kts" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/libs.versions.toml" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/libs.versions.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" beforeDir="false" afterPath="$PROJECT_DIR$/gradle/wrapper/gradle-wrapper.properties" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -27,7 +50,7 @@
   <component name="ClangdSettings">
     <option name="formatViaClangd" value="false" />
   </component>
-  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=LocalEmulator, isTemplate=false, identifier=path=/Users/dxvnee/.android/avd/Pixel_3a_API_VanillaIceCream.ini)]" />
+  <component name="ExecutionTargetManager" SELECTED_TARGET="device_and_snapshot_combo_box_target[DeviceId(pluginId=PhysicalDevice, isTemplate=false, identifier=serial=e8339793)]" />
   <component name="ExternalProjectsData">
     <projectState path="$PROJECT_DIR$">
       <ProjectState />
@@ -60,6 +83,7 @@
     <option name="RECENT_TEMPLATES">
       <list>
         <option value="Kotlin File" />
+        <option value="Kotlin Class" />
       </list>
     </option>
   </component>
@@ -111,9 +135,10 @@
     &quot;cf.first.check.clang-format&quot;: &quot;false&quot;,
     &quot;cidr.known.project.marker&quot;: &quot;true&quot;,
     &quot;com.google.services.firebase.aqiPopupShown&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;feature/mhs2&quot;,
     &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/dxvnee/Documents/EI/TUGAS/MOBPRO2/tubes-4601-pidizi/app/src/main/java/org/d3if3121/tellink/model&quot;,
-    &quot;project.structure.last.edited&quot;: &quot;Modules&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/dxvnee/Documents/EI/TUGAS/MOBPRO2/tubes-4601-pidizi/app/src/main/java/org/d3if3121/tellink/data/model&quot;,
+    &quot;project.structure.last.edited&quot;: &quot;Project&quot;,
     &quot;project.structure.proportion&quot;: &quot;0.17&quot;,
     &quot;project.structure.side.proportion&quot;: &quot;0.2&quot;,
     &quot;run.code.analysis.last.selected.profile&quot;: &quot;pProject Default&quot;,
@@ -122,18 +147,25 @@
   &quot;keyToStringList&quot;: {
     &quot;ExportApk.BuildVariants&quot;: [
       &quot;release&quot;
-    ],
-    &quot;kotlin-gradle-user-dirs&quot;: [
-      &quot;/Users/dxvnee/.gradle&quot;
     ]
   }
 }</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
-      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/data/model" />
       <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink" />
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/model" />
       <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/viewmodel" />
       <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/screen" />
+    </key>
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/app/src/main/java/org/d3if3121/tellink/ui/component" />
+    </key>
+    <key name="MoveKotlinTopLevelDeclarationsDialog.RECENTS_KEY">
+      <recent name="org.d3if3121.tellink.data.repository.interfaces" />
+      <recent name="org.d3if3121.tellink.data.repository" />
+      <recent name="org.d3if3121.tellink.ui" />
+      <recent name="org.d3if3121.tellink.ui.viewmodel" />
     </key>
     <key name="CopyKotlinDeclarationDialog.RECENTS_KEY">
       <recent name="org.d3if3121.tellink.ui.viewmodel" />
@@ -154,6 +186,8 @@
       <option name="DYNAMIC_FEATURES_DISABLED_LIST" value="" />
       <option name="ACTIVITY_EXTRA_FLAGS" value="" />
       <option name="MODE" value="default_activity" />
+      <option name="RESTORE_ENABLED" value="false" />
+      <option name="RESTORE_FILE" value="" />
       <option name="CLEAR_LOGCAT" value="false" />
       <option name="SHOW_LOGCAT_AUTOMATICALLY" value="false" />
       <option name="TARGET_SELECTION_MODE" value="DEVICE_AND_SNAPSHOT_COMBO_BOX" />
@@ -273,7 +307,15 @@
       <option name="project" value="LOCAL" />
       <updated>1732498537477</updated>
     </task>
-    <option name="localTasksCounter" value="8" />
+    <task id="LOCAL-00008" summary="Membuat Struktur MVVM dengan Hilt (ViewModel, model, interface, response, repository)">
+      <option name="closed" value="true" />
+      <created>1732702109903</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1732702109903</updated>
+    </task>
+    <option name="localTasksCounter" value="9" />
     <servers />
   </component>
   <component name="Vcs.Log.Tabs.Properties">
@@ -307,6 +349,7 @@
     <MESSAGE value="Membuat dynamic topappbar" />
     <MESSAGE value="Selesai Frontend" />
     <MESSAGE value="Konfigurasi database Firebase" />
-    <option name="LAST_COMMIT_MESSAGE" value="Konfigurasi database Firebase" />
+    <MESSAGE value="Membuat Struktur MVVM dengan Hilt (ViewModel, model, interface, response, repository)" />
+    <option name="LAST_COMMIT_MESSAGE" value="Membuat Struktur MVVM dengan Hilt (ViewModel, model, interface, response, repository)" />
   </component>
 </project>

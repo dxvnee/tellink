@@ -16,6 +16,7 @@ const val MAHASISWA = "mahasiswa"
 @InstallIn(SingletonComponent::class)
 object AppModule {
     @Provides
+    @Singleton
     fun provideMahasiswaListRepository(): MahasiswaListInterface = MahasiswaListRepository(
         mahasiswaRef = Firebase.firestore.collection(MAHASISWA)
     )

@@ -1,11 +1,11 @@
 <resources>
-    <string name="app_name">TelkomUniversityLink</string>
+    <string name="app_name">Tellink</string>
     <string name="tellink">Tellink.</string>
     <string name="login">Login</string>
     <string name="nim">NIM :</string>
-    <string name="email">E-mail :</string>
+    <string name="name">Name :</string>
     <string name="enter_nim">Enter NIM here:</string>
-    <string name="enter_email">Enter e-mail here:</string>
+    <string name="enter_name">Enter name here:</string>
     <string name="enter_password">Enter Password here:</string>
     <string name="password">Password :</string>
     <string name="confirm_password">Confirm :</string>
@@ -17,6 +17,7 @@
     <string name="have_account">Have account? </string>
     <string name="register">Register!</string>
     <string name="nama">Eigiya Daramuli Kale</string>
+    <string name="full_name">Full Name: </string>
 
 
     //Home

@@ -116,57 +116,21 @@ import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
 import androidx.compose.ui.text.style.TextAlign
-
-@Composable
-fun ObserveScrollState(lazyListState: LazyListState) : Boolean{
-    var isScrolledFar by remember { mutableStateOf(false) }
-
-    LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.firstVisibleItemScrollOffset > 28 }
-            .distinctUntilChanged()
-            .debounce(160)
-            .collect { newIsScrolledFar ->
-                isScrolledFar = newIsScrolledFar
-            }
-    }
-
-   return isScrolledFar
-}
-
-@Composable
-fun cekScroll(lazyListState: LazyListState) : Boolean{
-    var isScrolled by remember { mutableStateOf(false) }
-
-    LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.firstVisibleItemIndex > 0 }
-            .distinctUntilChanged()
-            .debounce(80)
-            .collect {
-                isScrolled = it
-            }
-    }
-    return isScrolled
-}
-
-@Composable
-fun ScrollDirectionDetector(lazyListState: LazyListState): String {
-    var previousIndex by remember { mutableStateOf(lazyListState.firstVisibleItemIndex) }
-    var scrollDirection by remember { mutableStateOf("Idle") }
-
-    LaunchedEffect(lazyListState) {
-        snapshotFlow { lazyListState.firstVisibleItemIndex }
-            .collect { currentIndex ->
-                scrollDirection = when {
-                    currentIndex > previousIndex -> "Down"
-                    currentIndex < previousIndex -> "Up"
-                    else -> "Idle"
-                }
-                previousIndex = currentIndex
-            }
-    }
-
-    return scrollDirection
-}
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
+import org.d3if3121.tellink.components.LoadingIndicator
+import org.d3if3121.tellink.core.printError
+import org.d3if3121.tellink.data.model.Mahasiswa
+import org.d3if3121.tellink.data.model.Response.Success
+import org.d3if3121.tellink.data.model.Response.Loading
+import org.d3if3121.tellink.data.model.Response.Failure
+import org.d3if3121.tellink.data.model.Response
+import org.d3if3121.tellink.ui.component.BottomBar
+import org.d3if3121.tellink.ui.component.InputPutihSearch
+import org.d3if3121.tellink.ui.component.KartuKonten
+import org.d3if3121.tellink.ui.component.TopBar
+import org.d3if3121.tellink.ui.component.cekScroll
+import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
 
 
 @Preview(showBackground = true)
@@ -178,209 +142,71 @@ fun HomePagePreview() {
 
 val TOP_BAR_HEIGHT = 100.dp
 
+
+
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
-fun TombolGambar(
-    painter: Painter,
-    size: Int,
-    onClick: () -> Unit,
-){
-    IconButton(onClick = onClick) {
-        Image(
-            painter = painter,
-            contentDescription = "Chat logo",
-            modifier = Modifier.size(size.dp)
-        )
+fun HomePage(
+    navController: NavHostController,
+    viewModel: MahasiswaListViewModel = hiltViewModel()
+) {
+    val lazyListState = rememberLazyListState()
+
+    var user = viewModel.user
+
+    LaunchedEffect(user) {
+        Log.d("kejalan", user.toString())
     }
-}
 
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun TopBar(
-    lazyListState: LazyListState,
-    helloActive: Boolean,
-    profileActive: Boolean = false,
-    TOP_BAR_ZERO: Int = 0,
-    search: String = "",
-    onSearchChange: (String) -> Unit = {},
-    navController: NavHostController = rememberNavController()
-){
-    if (profileActive == true){
+    Scaffold(
+        topBar = {
+            Log.d("usersekaranghome", user.toString())
 
-        TopAppBar(
-            title = {
-                Row(
-                    horizontalArrangement = Arrangement.Start,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = Modifier.padding(top = 10.dp)
-                ) {
-                    Column (
-                        horizontalAlignment = Alignment.Start,
-                    ){
-                        IconButton(
-                            onClick = {},
-                            modifier = Modifier.offset(x = -12.dp)
-                        ){
-                            Icon(
-                                modifier = Modifier.size(30.dp),
-                                imageVector = Icons.Default.ArrowBack,
-                                contentDescription = "eheh",
-                                tint = Warna.AbuTua
-                            )
-                        }
+            TopBar(lazyListState = lazyListState, helloActive = true, navController = navController, user = user)
+        },
+        content = { paddingValues ->
+            when(val mahasiswaListResponse = viewModel.mahasiswaListResponse){
+                is Loading -> LoadingIndicator()
+                is Success -> mahasiswaListResponse.data.let { mahasiswaList ->
+                    if (mahasiswaList!!.isEmpty()) {
 
-                    }
-                    Column (
+                    } else {
+                        Log.d("HASILNYA", mahasiswaList.toString())
+                        MainContentHome(
+                            navController = navController,
+                            lazyListState = lazyListState,
+                            paddingValues = paddingValues,
 
-                    ){
-                        InputPutihSearchProfile(
-                            input = search,
-                            placeholder = stringResource(id = R.string.search),
-                            onInputChange = onSearchChange,
-                            keyboardType = KeyboardType.Text,
-                            modifier = Modifier.fillMaxWidth()
-                                .padding( end = 17.dp).height(40.dp),
-                            fontSize = 15
-
+                            mahasiswaList = mahasiswaList
                         )
                     }
-
-
                 }
-            },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = Warna.PutihNormal,
-                titleContentColor = Warna.PutihNormal
-            ),
-            modifier = Modifier
-                .background(color = Warna.PutihNormal).padding(top = 0.dp)
-                .height(height = 100.dp)
-        )
-    } else {
-        TopAppBar(
-            title = {
-                Column() {
-                    Row(
-                        horizontalArrangement = Arrangement.Start,
-                        verticalAlignment = Alignment.CenterVertically,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Column (
-                            modifier = Modifier
-                        ){
-                            Image(
-                                painter = painterResource(id = R.drawable.photo),
-                                contentDescription = "App logo",
-                                modifier = Modifier
-                                    .size(45.dp)
-                            )
-                        }
-
-                        Column (
-
-                        ){
-                            if (helloActive == true) {
-                                Text(
-                                    text = "Hello,",
-                                    color = Warna.MerahNormal,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.Normal,
-                                    modifier = Modifier.offset(y = 5.dp)
-                                )
-                                Text(
-                                    text = "Eigiya Daramuli Kale",
-                                    color = Warna.HitamNormal,
-                                    fontSize = 17.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    modifier = Modifier.offset(y = -4.dp)
-                                )
-                            } else {
-                                Text(
-                                    text = "Eigiya Daramuli Kale",
-                                    color = Warna.HitamNormal,
-                                    fontSize = 17.sp,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    modifier = Modifier.offset(y = 5.dp)
-                                )
-                                Text(
-                                    text = "6706223121",
-                                    color = Warna.AbuTua,
-                                    fontSize = 15.sp,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.offset(y = -4.dp)
-                                )
-                            }
-
-
-
-
-                        }
-                        Row (
-                            horizontalArrangement = Arrangement.End,
-                            modifier = Modifier.fillMaxWidth()
-                        ){
-                            TombolGambar(
-                                painterResource(id = R.drawable.notifications),
-                                26
-                            ){
-
-                            }
-                            TombolGambar(
-                                painterResource(id = R.drawable.chat),
-                                26
-                            ){
-                                navController.navigate(Screen.Login.route)
-                            }
-                        }
-
-                    }
-
-                    Box(modifier = Modifier.fillMaxWidth().height(30.dp).background(Warna.MerahNormal).padding(10.dp))
-                }
-
-            },
-            colors = TopAppBarDefaults.mediumTopAppBarColors(
-                containerColor = Warna.PutihNormal,
-                titleContentColor = Warna.PutihNormal
-            ),
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(color = Warna.PutihNormal)
-                .animateContentSize(animationSpec =  tween(
-                    durationMillis = 500,
-                ))
-                .height(height =
-                if (cekScroll(lazyListState)){
-                    TOP_BAR_ZERO.dp
-                    if (ScrollDirectionDetector(lazyListState) == "Up" && ObserveScrollState(lazyListState)){
-                        Log.d("cekFlow", ObserveScrollState(lazyListState).toString())
-                        TOP_BAR_HEIGHT
-                    } else {
-                        TOP_BAR_ZERO.dp
-                    }
-                } else {
-                    TOP_BAR_HEIGHT
-                }
-                ),
-        )
-    }
-
-
+                is Failure -> printError(mahasiswaListResponse.e)
+            }
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        }
+    )
 }
 
+
 @Composable
-fun MainContent(
+fun MainContentHome(
     navController: NavHostController,
     lazyListState: LazyListState,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    mahasiswaList: List<Mahasiswa>,
+    viewModel: MahasiswaListViewModel = hiltViewModel()
 ) {
+
+
     val numbers = remember { List(size = 200){ it } }
     val padding by animateDpAsState(
         targetValue = if (cekScroll(lazyListState)) 0.dp else TOP_BAR_HEIGHT,
         animationSpec = tween(
             durationMillis = 500,
-
-
-        )
+            )
     )
     var search by remember { mutableStateOf("") }
 
@@ -400,7 +226,7 @@ fun MainContent(
                     fontSize = 21.sp,
                     fontWeight = FontWeight.ExtraBold,
 
-                )
+                    )
             }
             item {
                 Spacer(modifier = Modifier.height(10.dp))
@@ -421,11 +247,16 @@ fun MainContent(
                     )
                 }
             }
-            items(100){
+            items(
+                items = mahasiswaList,
+                key = { mahasiswa ->
+                    mahasiswa.nim.orEmpty()
+                }
+            ){ mahasiswa ->
                 KartuKonten(
                     fotoprofil = R.drawable.photo,
-                    nama = "Eigiya Daramuli Kale",
-                    jurusan = "D3 Rekayasa Perangkat Lunak Aplikasi",
+                    nama = mahasiswa.nama ?: "Invalid",
+                    jurusan = mahasiswa.jurusan ?: "Invalid",
                     hari = "5 Days Ago",
 
                     judul = "MAU NANYA DONGG",
@@ -438,254 +269,5 @@ fun MainContent(
 
         }
     }
-
-}
-
-
-@Composable
-fun KartuKonten(
-    fotoprofil: Int,
-    nama: String,
-    jurusan: String,
-    hari: String,
-
-    judul: String,
-    gambar: Int,
-    konten: String,
-){
-
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(500.dp),
-
-        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ){
-        Column (
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(17.dp).fillMaxWidth().fillMaxHeight()
-        ){
-            Row (modifier = Modifier.padding(bottom = 17.dp).fillMaxWidth()){
-                Column (
-                    modifier = Modifier.padding(end = 10.dp),
-                    verticalArrangement = Arrangement.Center,
-                ){
-                    Image(
-                        painter = painterResource(id = fotoprofil),
-                        contentDescription = "App logo",
-                        modifier = Modifier
-                            .size(52.dp)
-                    )
-                }
-
-                Column {
-                    Text(
-                        text = nama,
-                        color = Warna.MerahNormal,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.ExtraBold,
-                    )
-                    Text(
-                        text = jurusan,
-                        color = Warna.AbuTua,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Normal,
-                        modifier = Modifier.offset(y = -3.dp)
-                    )
-                    Text(
-                        text = hari,
-                        color = Warna.AbuTua,
-                        fontSize = 15.sp,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.offset(y = -8.dp)
-                    )
-
-                }
-
-            }
-            Text(
-                text = judul,
-                color = Warna.HitamNormal,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-                modifier = Modifier.padding(top = 9.dp, bottom = 5.dp)
-            )
-            Row(
-                modifier = Modifier.fillMaxWidth().padding(bottom = 17.dp)
-            ){
-                for (i in 1..3){
-                    Card(
-                        modifier = Modifier
-                            .padding(end = 7.dp)
-                            .width(80.dp)
-                            .height(30.dp),
-
-                        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
-                        shape = RoundedCornerShape(5.dp),
-                        border = BorderStroke(1.dp, Warna.MerahNormal)
-                    ){
-                        Column (
-                            verticalArrangement = Arrangement.Center,
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            modifier = Modifier.fillMaxSize()
-                        ){
-                            Text(
-                                text = "Android",
-                                color = Warna.MerahNormal,
-                                fontSize = 15.sp,
-                                fontWeight = FontWeight.Normal,
-                            )
-                        }
-                    }
-                }
-
-            }
-
-
-
-            Image(
-                painter = painterResource(gambar),
-                contentDescription = "Chat logo",
-                modifier = Modifier.fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-            )
-
-            Text(
-                text = konten,
-                color = Warna.HitamNormal,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.padding(top = 12.dp, bottom = 12.dp),
-                textAlign = TextAlign.Justify
-            )
-            Column (
-                verticalArrangement = Arrangement.Bottom,
-                modifier = Modifier.fillMaxHeight()
-            ) {
-                ButtonMerah(
-                    onClick = {
-
-                    },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .size(46.dp),
-                    content = {
-                        Text(
-                            text = stringResource(id = R.string.request),
-                            fontWeight = FontWeight.ExtraBold,
-                            fontSize = 18.sp,
-                            color = Warna.PutihNormal
-                        )
-                    }
-                )
-            }
-
-
-
-        }
-
-
-
-
-
-    }
-}
-
-@Composable
-fun NumberHolder(number: Int){
-    Row(
-        modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically
-    ){
-        Text(
-            text = number.toString()
-        )
-    }
-}
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun HomePage(
-    navController: NavHostController
-) {
-    val lazyListState = rememberLazyListState()
-
-    Scaffold(
-        topBar = {
-            TopBar(lazyListState = lazyListState, helloActive = true, navController = navController)
-        },
-        content = { paddingValues ->
-            MainContent(navController = navController, lazyListState = lazyListState, paddingValues = paddingValues)
-        },
-        bottomBar = {
-            BottomBar(navController = navController)
-        }
-    )
-
-
-}
-
-
-@Composable
-fun BottomBar(navController: NavHostController){
-    val screens = listOf(
-        BottomBarScreen.BottomMenuPage,
-        BottomBarScreen.BottomSkillPage,
-        BottomBarScreen.BottomProfilePage,
-    )
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-
-    BottomNavigation(
-        backgroundColor = Warna.MerahTua,
-        modifier = Modifier.height(70.dp)
-    ){
-        screens.forEach{ screen ->
-            AddItem(screen = screen, currentDestination = currentDestination, navController = navController)
-        }
-    }
-
-}
-
-@Composable
-fun RowScope.AddItem(
-    screen: BottomBarScreen,
-    currentDestination: NavDestination?,
-    navController: NavHostController
-){
-    BottomNavigationItem (
-        modifier = Modifier.padding(top = 10.dp, bottom = 36.dp),
-        label = {
-            Text(
-                text = screen.title, color = Warna.PutihNormal,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Bold,
-            )
-        },
-        icon = {
-            Icon(
-                modifier = Modifier.size(65.dp)
-                    .padding(bottom =1.dp),
-                imageVector = screen.icon,
-                contentDescription = "eheh",
-                tint = Warna.PutihNormal
-            )
-        },
-        selected = currentDestination?.hierarchy?.any {
-            it.route == screen.route
-        } == true,
-        unselectedContentColor = LocalContentColor.current.copy(alpha = ContentAlpha.disabled),
-        onClick = {
-            navController.navigate(screen.route){
-                popUpTo(navController.graph.findStartDestination().id)
-                launchSingleTop = true
-            }
-        }
-
-    )
-
 
 }
