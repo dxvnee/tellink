@@ -41,10 +41,23 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import org.d3if3121.tellink.components.LoadingIndicator
+import org.d3if3121.tellink.core.printError
+import org.d3if3121.tellink.data.model.Mahasiswa
+import org.d3if3121.tellink.data.model.Response
 import org.d3if3121.tellink.navigation.Screen
+import org.d3if3121.tellink.ui.component.ButtonMerah
+import org.d3if3121.tellink.ui.component.InputPassword
+import org.d3if3121.tellink.ui.component.InputPutih
+import org.d3if3121.tellink.data.model.Response.Loading
+import org.d3if3121.tellink.data.model.Response.Success
+import org.d3if3121.tellink.data.model.Response.Failure
 import org.d3if3121.tellink.ui.theme.Warna
+import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
 
 
 @Preview(showBackground = true)
@@ -55,15 +68,13 @@ fun RegisterPagePreview() {
     )
 }
 
-
-
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RegisterPage(
     navController: NavHostController,
+    viewmodel: MahasiswaListViewModel = hiltViewModel()
 ){
     var nim by remember { mutableStateOf("") }
-    var email by remember { mutableStateOf("") }
+    var nama by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible = remember { mutableStateOf(false) }
 
@@ -72,13 +83,37 @@ fun RegisterPage(
 
     var usernameError by remember { mutableStateOf(false) }
 
+    var addingMahasiswa by remember { mutableStateOf(false) }
+
+    var errorMessage by remember { mutableStateOf("") }
+
+    fun handleRegister(){
+        val mahasiswa =  Mahasiswa(
+            nim = nim,
+            password = password,
+            nama = nama,
+            jurusan = "Unknown",
+            angkatan = "Unknown",
+        )
+
+        if (nim.isNotEmpty() && nama.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
+            viewmodel.addMahasiswa(mahasiswa)
+        } else {
+
+        }
+    }
+    when(val addMahasiswa = viewmodel.addMahasiswaResponse) {
+        is Loading -> false
+        is Success -> navController.navigate(Screen.Login.route)
+        is Failure -> printError(addMahasiswa.e)
+    }
+
     Column(
         modifier = Modifier
             .fillMaxWidth()
             .fillMaxHeight()
             .background(Warna.PutihNormal, RectangleShape)
     ) {
-
 
         Column {
             Row(
@@ -254,21 +289,29 @@ fun RegisterPage(
                 ){
                     Column {
                         Text(
-                            text = stringResource(id = R.string.email),
+                            text = stringResource(id = R.string.full_name),
                             color = Warna.MerahNormal,
                             fontSize = 17.sp,
                             fontWeight = FontWeight.Bold,
                             modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
                         )
                         InputPutih(
-                            input = email,
-                            placeholder = stringResource(id = R.string.enter_email),
+                            input = nama,
+                            placeholder = stringResource(id = R.string.enter_name),
                             onInputChange = { input ->
-                                email = input
+                                nama = input
                             },
                             keyboardType = KeyboardType.Text,
                             modifier = Modifier.fillMaxWidth()
                         )
+
+                        errorMessage?.let {
+                            Text(
+                                text = it,
+                                color = Color.Red,
+                                modifier = Modifier.padding(8.dp)
+                            )
+                        }
 
                     }
                 }
@@ -282,7 +325,7 @@ fun RegisterPage(
                     ) {
                         ButtonMerah(
                             onClick = {
-
+                                handleRegister()
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -311,6 +354,7 @@ fun RegisterPage(
                             ClickableText(
                                 text = AnnotatedString(stringResource(id = R.string.login)),
                                 onClick = {
+
                                     navController.navigate(Screen.Login.route)
                                 },
                                 style = TextStyle.Default.copy(

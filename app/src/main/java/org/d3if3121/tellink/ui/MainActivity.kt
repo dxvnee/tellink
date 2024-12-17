@@ -12,7 +12,6 @@ import org.d3if3121.tellink.ui.theme.TellinkTheme
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
         setContent {
             TellinkTheme {
                 SetupNavGraph()

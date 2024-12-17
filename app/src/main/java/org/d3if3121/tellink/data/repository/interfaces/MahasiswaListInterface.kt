@@ -9,6 +9,9 @@ typealias MahasiswaListResponse = Response<List<Mahasiswa>>
 typealias AddMahasiswaResponse = Response<String>
 typealias UpdateMahasiswaResponse = Response<Void>
 typealias DeleteMahasiswaResponse = Response<Void>
+typealias MahasiswaByNimResponse = Response<Mahasiswa>
+
+typealias LoginResponse = Response<Mahasiswa>
 
 interface MahasiswaListInterface {
     fun getMahasiswaList(): Flow<MahasiswaListResponse>
@@ -16,4 +19,9 @@ interface MahasiswaListInterface {
     suspend fun addMahasiswa(mahasiswa: Mahasiswa): AddMahasiswaResponse
     suspend fun updateMahasiswa(mahasiswa: Mahasiswa): UpdateMahasiswaResponse
     suspend fun deleteMahasiswa(id: String): DeleteMahasiswaResponse
+
+    suspend fun loginMahasiswa(nim: String, password: String): LoginResponse
+
+    suspend fun getMahasiswaByNim(nim: String): MahasiswaByNimResponse
+
 }

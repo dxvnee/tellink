@@ -99,6 +99,12 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
 import androidx.compose.ui.text.style.TextAlign
+import org.d3if3121.tellink.ui.component.BottomBar
+import org.d3if3121.tellink.ui.component.KartuProfil
+import org.d3if3121.tellink.ui.component.KartuProfilGambar
+import org.d3if3121.tellink.ui.component.PilihanPutih
+import org.d3if3121.tellink.ui.component.TopBar
+import org.d3if3121.tellink.ui.component.cekScroll
 
 
 @Preview(showBackground = true)
@@ -280,114 +286,6 @@ fun MainContentProfile(
     }
 
 
-}
-
-
-@Composable
-fun KartuProfil(
-    judul: String,
-    konten: String,
-){
-
-    Text(
-        text = judul,
-        color = Warna.MerahNormal,
-        fontSize = 21.sp,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier.padding(bottom = 8.dp)
-
-        )
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(bottom = 20.dp),
-
-        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ){
-        Column (
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(17.dp).fillMaxSize()
-        ){
-            Text(
-                text = konten,
-                color = Warna.HitamNormal,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Justify
-            )
-        }
-
-
-
-
-
-    }
-}
-
-
-@Composable
-fun KartuProfilGambar(
-    fotoprofil: Int,
-    nama: String,
-    jurusan: String,
-    hari: String,
-
-    judul: String,
-    gambar: Int,
-    konten: String,
-){
-
-    Text(
-        text = judul,
-        color = Warna.MerahNormal,
-        fontSize = 21.sp,
-        fontWeight = FontWeight.ExtraBold,
-        modifier = Modifier.padding(bottom = 8.dp)
-
-    )
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .fillMaxHeight()
-            .padding(bottom = 20.dp),
-
-        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ){
-        Column (
-            horizontalAlignment = Alignment.Start,
-            verticalArrangement = Arrangement.Top,
-            modifier = Modifier.padding(17.dp).fillMaxSize()
-        ){
-
-            Image(
-                painter = painterResource(gambar),
-                contentDescription = "Chat logo",
-                modifier = Modifier.fillMaxWidth()
-                    .clip(RoundedCornerShape(10.dp))
-                    
-            )
-
-            Text(
-                text = konten,
-                color = Warna.HitamNormal,
-                fontSize = 15.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Justify,
-                modifier = Modifier.padding(top = 12.dp)
-            )
-        }
-
-
-
-
-
-    }
 }
 
 

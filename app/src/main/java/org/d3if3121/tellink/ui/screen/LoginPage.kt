@@ -1,11 +1,12 @@
 package org.d3if3121.tellink.ui.screen
 
+import android.util.Log
+import android.widget.Toast
 import org.d3if3121.tellink.R
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -14,65 +15,48 @@ import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Search
-import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
-import androidx.compose.material3.DisplayMode
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.OutlinedTextField
-import androidx.compose.material3.OutlinedTextFieldDefaults
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
-import androidx.compose.ui.text.Placeholder
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.PasswordVisualTransformation
-import androidx.compose.ui.text.input.VisualTransformation
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.rememberNavController
+import org.d3if3121.tellink.data.model.MahasiswaLogin
+import org.d3if3121.tellink.data.model.Response
+import org.d3if3121.tellink.di.MAHASISWA
 import org.d3if3121.tellink.navigation.Screen
-import org.d3if3121.tellink.ui.theme.TellinkTheme
+import org.d3if3121.tellink.ui.component.ButtonMerah
+import org.d3if3121.tellink.ui.component.InputPassword
+import org.d3if3121.tellink.ui.component.InputPutih
 import org.d3if3121.tellink.ui.theme.Warna
-
+import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
 
 
 @Preview(showBackground = true)
@@ -83,266 +67,46 @@ fun LoginPagePreview() {
 
 
 
-@Composable
-fun ButtonMerah(
-    onClick: () -> Unit,
-    content: @Composable () -> Unit,
-    modifier: Modifier,
-){
-    Button(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(18.dp),
-        content = {
-            content()
-        },
-        colors = ButtonDefaults.buttonColors(
-            containerColor =  Warna.MerahNormal,
-            contentColor =  Warna.PutihNormal
-        )
-    )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InputPutih(
-    input: String,
-    placeholder: String,
-    onInputChange: (String) -> Unit,
-    keyboardType: KeyboardType,
-    modifier: Modifier = Modifier
-){
-    var isFocused by remember { mutableStateOf(false) }
-    OutlinedTextField(
-        value = input,
-        onValueChange = onInputChange,
-        placeholder = {
-           
-            Text(
-                text = placeholder,
-                color = Warna.AbuTua,
-                fontSize = 17.sp,
-                fontWeight = FontWeight.Normal,
-                modifier = Modifier.fillMaxWidth()
-            )
-        },
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-            .height(50.dp)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedTextColor = Warna.HitamNormal,
-            unfocusedTextColor = Warna.HitamNormal,
-            focusedPlaceholderColor = Warna.MerahNormal,
-            focusedBorderColor = Warna.MerahNormal,
-            unfocusedBorderColor = Warna.AbuMuda,
-            containerColor = if (isFocused) Warna.PutihNormal else Warna.AbuMuda
-        ),
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-
-    )
-}
-
-@Composable
-fun InputPutihSearchProfile(
-    input: String,
-    placeholder: String,
-    onInputChange: (String) -> Unit,
-    keyboardType: KeyboardType,
-    modifier: Modifier = Modifier,
-    fontSize: Int = 17
-){
-    var isFocused by remember { mutableStateOf(false) }
-
-    Card(
-        modifier = modifier
-            .border(1.dp, if (!isFocused) Warna.AbuMuda else Warna.MerahNormal, RoundedCornerShape(10.dp)).fillMaxHeight(),
-        colors = if (!isFocused) CardDefaults.cardColors(Warna.AbuMuda) else CardDefaults.cardColors(Warna.PutihNormal)
-
-    ) {
-        Row (
-            verticalAlignment = Alignment.CenterVertically,
-            modifier = Modifier.fillMaxHeight().padding(start = 10.dp)
-        ){
-            Icon(
-                modifier = Modifier.size(25.dp),
-                imageVector = Icons.Default.Search,
-                contentDescription = "eheh",
-                tint = Warna.AbuTua
-            )
-            Column (
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.Start,
-                modifier = Modifier.fillMaxHeight().padding(start = 7.dp)
-            ){
-                if (input.isEmpty()) {
-                    Text(
-                        text = placeholder,
-                        color = Warna.AbuTua,
-                        fontSize = fontSize.sp,
-                        style = TextStyle(
-                            fontSize = fontSize.sp,
-                            color = Warna.HitamNormal,
-                            textAlign = TextAlign.Center
-                        ),
-                        modifier = Modifier.offset(y = 8.dp)
-
-                    )
-                }
-                BasicTextField(
-                    value =  input,
-                    onValueChange = onInputChange,
-                    textStyle = TextStyle(
-                        fontSize = fontSize.sp,
-                        color = Warna.HitamNormal,
-                        textAlign = TextAlign.Start
-                    ),
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .offset(y = if (input.isEmpty()) -9.dp else 0.dp)
-                        .onFocusChanged {
-                            isFocused = it.isFocused
-                        },
-                )
-            }
-        }
-
-
-    }
-}
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InputPutihSearch(
-    input: String,
-    placeholder: String,
-    onInputChange: (String) -> Unit,
-    keyboardType: KeyboardType,
-    modifier: Modifier = Modifier,
-    fontSize: Int = 17
-){
-    var isFocused by remember { mutableStateOf(false) }
-    OutlinedTextField(
-        leadingIcon = {
-            Icon(
-                modifier = Modifier.size(25.dp),
-                imageVector = Icons.Default.Search,
-                contentDescription = "eheh",
-                tint = Warna.AbuTua
-            )
-        },
-        textStyle = TextStyle(
-            color = Warna.HitamNormal,
-            fontSize = fontSize.sp,
-            fontWeight = FontWeight.Normal,
-        ),
-        value = input,
-        onValueChange = onInputChange,
-        singleLine = true,
-        placeholder = {
-            Text(
-                text = placeholder,
-                color = Warna.AbuTua,
-                fontSize = fontSize.sp,
-                fontWeight = FontWeight.Normal,
-                textAlign = TextAlign.Center
-            )
-        },
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifier
-            .height(48.dp)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedTextColor = Warna.HitamNormal,
-            unfocusedTextColor = Warna.HitamNormal,
-            focusedPlaceholderColor = Warna.MerahNormal,
-            focusedBorderColor = Warna.MerahNormal,
-            unfocusedBorderColor = Warna.AbuMuda,
-            containerColor = if (isFocused) Warna.PutihNormal else Warna.AbuMuda
-        ),
-
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-
-        )
-}
-
-@OptIn(ExperimentalMaterial3Api::class)
-@Composable
-fun InputPassword(
-    input: String,
-    placeholder: String,
-    onInputChange: (String) -> Unit,
-    keyboardType: KeyboardType,
-    passwordVisible: MutableState<Boolean>,
-    modifiers: Modifier = Modifier
-){
-    var isFocused by remember { mutableStateOf(false) }
-    OutlinedTextField(
-        value = input,
-        onValueChange = onInputChange,
-        placeholder = {
-            Column(modifier = Modifier.verticalScroll(rememberScrollState())) {
-                Text(
-                    text = placeholder,
-                    color = Warna.AbuTua,
-                    fontSize = 17.sp,
-                    fontWeight = FontWeight.Normal,
-                    maxLines = 1
-                )
-            }
-
-        },
-
-        shape = RoundedCornerShape(10.dp),
-        modifier = modifiers
-            .height(50.dp)
-            .onFocusChanged { focusState ->
-                isFocused = focusState.isFocused
-            },
-        colors = TextFieldDefaults.outlinedTextFieldColors(
-            focusedTextColor = Warna.HitamNormal,
-            unfocusedTextColor = Warna.HitamNormal,
-            focusedPlaceholderColor = Warna.MerahNormal,
-            focusedBorderColor = Warna.MerahNormal,
-            unfocusedBorderColor = Warna.AbuMuda,
-            containerColor = if (isFocused) Warna.PutihNormal else Warna.AbuMuda
-        ),
-        keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-        visualTransformation = if (passwordVisible.value) VisualTransformation.None else PasswordVisualTransformation(),
-        trailingIcon = {
-            val image =
-                if (passwordVisible.value) painterResource(id = R.drawable.baseline_visibility_24)
-                else painterResource(id = R.drawable.baseline_visibility_off_24)
-
-            IconButton(onClick = {
-                passwordVisible.value = !passwordVisible.value
-            }) {
-                Icon(
-                    painter = image,
-                    contentDescription = if (passwordVisible.value) "Hide password" else "Show password",
-                    tint = Warna.MerahNormal
-                )
-            }
-        }
-
-        )
-}
-
-
-
-
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun LoginPage(
-    navController: NavHostController
+    navController: NavHostController,
+    viewmodel: MahasiswaListViewModel = hiltViewModel()
 ) {
     var nim by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
     var passwordVisible = remember { mutableStateOf(false) }
+    var mahasiswa by remember { mutableStateOf(MahasiswaLogin(nim = "", password = " ")) }
 
+    var context = LocalContext.current
+
+
+    fun handleLogin() {
+        if(nim.isNotEmpty() && password.isNotEmpty()){
+            mahasiswa = MahasiswaLogin(
+                nim = nim,
+                password = password
+            )
+
+            viewmodel.loginMahasiswa(mahasiswa)
+
+        }
+    }
+
+    when(val response = viewmodel.loginResponse){
+        is Response.Success -> {
+
+            viewmodel.addUser(response.data!!)
+            Log.d("CURRENTUSER2", viewmodel.user.toString())
+            navController.navigate(Screen.Home.route)
+        }
+        is Response.Failure -> {
+            Toast.makeText(context, response.e.toString(), Toast.LENGTH_SHORT).show()
+        }
+        is Response.Loading -> {
+            Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -350,7 +114,6 @@ fun LoginPage(
             .fillMaxHeight()
             .background(Warna.PutihNormal, RectangleShape)
     ) {
-
 
         Column {
             Row(
@@ -495,7 +258,8 @@ fun LoginPage(
                     ) {
                         ButtonMerah(
                             onClick = {
-                                navController.navigate(Screen.Home.route)
+                                handleLogin()
+
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
@@ -510,6 +274,7 @@ fun LoginPage(
                                 )
                             }
                         )
+
 
                         Row(
 

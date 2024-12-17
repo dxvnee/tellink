@@ -111,7 +111,11 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
-
+import org.d3if3121.tellink.ui.component.BottomBar
+import org.d3if3121.tellink.ui.component.InputPutihSearch
+import org.d3if3121.tellink.ui.component.KartuKonten
+import org.d3if3121.tellink.ui.component.TopBar
+import org.d3if3121.tellink.ui.component.cekScroll
 
 
 @Preview(showBackground = true)
@@ -225,62 +229,6 @@ fun MainContentProject(
 
 }
 
-
-@Composable
-fun PilihanPutih(){
-    Card(
-        modifier = Modifier
-            .fillMaxWidth()
-            .padding(bottom = 17.dp)
-            .height(50.dp),
-
-        colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
-        shape = RoundedCornerShape(10.dp),
-        elevation = CardDefaults.cardElevation(6.dp)
-    ){
-        Row (
-            modifier = Modifier.padding(8.dp)
-        ){
-            Button(
-                modifier = Modifier.size(50.dp).fillMaxWidth().weight(1f),
-                shape = RoundedCornerShape(7.dp),
-                colors = ButtonColors(
-                    containerColor =  Warna.MerahNormal,
-                    contentColor = Warna.PutihNormal,
-                    disabledContentColor = Warna.MerahNormal,
-                    disabledContainerColor = Warna.PutihNormal
-                ),
-                onClick = {},
-            ) {
-                Text(
-                    text = "Your Project",
-                    color = Warna.PutihNormal,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Bold,
-                )
-            }
-            Button(
-                modifier = Modifier.size(50.dp).fillMaxWidth().weight(1f),
-                shape = RoundedCornerShape(7.dp),
-                colors = ButtonColors(
-                    containerColor =  Warna.PutihNormal,
-                    contentColor = Warna.MerahNormal,
-                    disabledContentColor = Warna.PutihNormal,
-                    disabledContainerColor = Warna.MerahNormal
-                ),
-                onClick = {},
-            ) {
-                Text(
-                    text = "Recommended",
-                    color = Warna.MerahNormal,
-                    fontSize = 15.sp,
-                    fontWeight = FontWeight.Normal,
-                )
-            }
-
-        }
-    }
-}
 
 
 
