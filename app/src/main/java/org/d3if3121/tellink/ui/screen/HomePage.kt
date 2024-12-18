@@ -140,7 +140,7 @@ fun HomePagePreview() {
 }
 
 
-val TOP_BAR_HEIGHT = 100.dp
+val TOP_BAR_HEIGHT = 50.dp
 
 
 
@@ -151,12 +151,7 @@ fun HomePage(
     viewModel: MahasiswaListViewModel = hiltViewModel()
 ) {
     val lazyListState = rememberLazyListState()
-
     var user = viewModel.user
-
-    LaunchedEffect(user) {
-        Log.d("kejalan", user.toString())
-    }
 
     Scaffold(
         topBar = {
@@ -172,13 +167,15 @@ fun HomePage(
 
                     } else {
                         Log.d("HASILNYA", mahasiswaList.toString())
-                        MainContentHome(
-                            navController = navController,
-                            lazyListState = lazyListState,
-                            paddingValues = paddingValues,
+                        Column(modifier = Modifier.background(color = Warna.PutihNormal)){
+                            MainContentHome(
+                                navController = navController,
+                                lazyListState = lazyListState,
+                                paddingValues = paddingValues,
 
-                            mahasiswaList = mahasiswaList
-                        )
+                                mahasiswaList = mahasiswaList
+                            )
+                        }
                     }
                 }
                 is Failure -> printError(mahasiswaListResponse.e)
@@ -186,7 +183,8 @@ fun HomePage(
         },
         bottomBar = {
             BottomBar(navController = navController)
-        }
+        },
+        contentColor = Warna.PutihNormal
     )
 }
 
@@ -211,11 +209,12 @@ fun MainContentHome(
     var search by remember { mutableStateOf("") }
 
     Column(
-        modifier = Modifier.padding(start = 17.dp, end = 17.dp).background(color = Warna.PutihNormal)
+        modifier = Modifier.padding(start = 17.dp, end = 17.dp)
     ) {
 
         LazyColumn(
-            modifier = Modifier.padding(top = padding).fillMaxWidth().fillMaxHeight(),
+            modifier = Modifier.padding(top = padding).fillMaxWidth().fillMaxHeight()
+                .background(color = Warna.PutihNormal),
             state = lazyListState
         ){
             item {

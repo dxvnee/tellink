@@ -1,5 +1,7 @@
 package org.d3if3121.tellink.ui.screen
 
+import android.util.Log
+import android.widget.Toast
 import org.d3if3121.tellink.R
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
@@ -32,6 +34,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.AnnotatedString
@@ -73,6 +76,8 @@ fun RegisterPage(
     navController: NavHostController,
     viewmodel: MahasiswaListViewModel = hiltViewModel()
 ){
+    var context = LocalContext.current
+
     var nim by remember { mutableStateOf("") }
     var nama by remember { mutableStateOf("") }
     var password by remember { mutableStateOf("") }
@@ -96,16 +101,28 @@ fun RegisterPage(
             angkatan = "Unknown",
         )
 
-        if (nim.isNotEmpty() && nama.isNotEmpty() && password.isNotEmpty() && password == confirmPassword) {
-            viewmodel.addMahasiswa(mahasiswa)
+        if (nim.isNotEmpty() && nama.isNotEmpty() && password.isNotEmpty()) {
+            if (password == confirmPassword){
+                viewmodel.addMahasiswa(mahasiswa)
+            } else {
+                errorMessage = "Password doesn't match!"
+            }
         } else {
-
+            errorMessage = "All fields shouldn't be empty."
         }
     }
     when(val addMahasiswa = viewmodel.addMahasiswaResponse) {
-        is Loading -> false
-        is Success -> navController.navigate(Screen.Login.route)
-        is Failure -> printError(addMahasiswa.e)
+        is Loading -> {
+        }
+        is Success -> {
+            Toast.makeText(context, "Register Success!", Toast.LENGTH_SHORT).show()
+            navController.navigate(Screen.Login.route)
+        }
+        is Failure -> {
+            errorMessage = addMahasiswa.e!!.message.toString()
+            printError(addMahasiswa.e)
+            Log.d("tes", "masukkkkk")
+        }
     }
 
     Column(
@@ -305,13 +322,14 @@ fun RegisterPage(
                             modifier = Modifier.fillMaxWidth()
                         )
 
-                        errorMessage?.let {
-                            Text(
-                                text = it,
-                                color = Color.Red,
-                                modifier = Modifier.padding(8.dp)
-                            )
-                        }
+                        Text(
+                            text = errorMessage,
+                            color = Warna.MerahNormal,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                        )
+
 
                     }
                 }

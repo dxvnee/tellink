@@ -47,7 +47,6 @@ fun KartuKonten(
         modifier = Modifier
             .fillMaxWidth()
             .height(500.dp),
-
         colors = CardDefaults.cardColors(containerColor = Warna.PutihNormal),
         shape = RoundedCornerShape(10.dp),
         elevation = CardDefaults.cardElevation(6.dp)

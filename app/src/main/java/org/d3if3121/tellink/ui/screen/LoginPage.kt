@@ -77,6 +77,7 @@ fun LoginPage(
     var password by remember { mutableStateOf("") }
     var passwordVisible = remember { mutableStateOf(false) }
     var mahasiswa by remember { mutableStateOf(MahasiswaLogin(nim = "", password = " ")) }
+    var errorMessage by remember { mutableStateOf("") }
 
     var context = LocalContext.current
 
@@ -95,16 +96,14 @@ fun LoginPage(
 
     when(val response = viewmodel.loginResponse){
         is Response.Success -> {
-
             viewmodel.addUser(response.data!!)
-            Log.d("CURRENTUSER2", viewmodel.user.toString())
+            Toast.makeText(context, "Login Success!", Toast.LENGTH_SHORT).show()
             navController.navigate(Screen.Home.route)
         }
         is Response.Failure -> {
-            Toast.makeText(context, response.e.toString(), Toast.LENGTH_SHORT).show()
+            errorMessage = response.e!!.message.toString()
         }
         is Response.Loading -> {
-            Toast.makeText(context, "LOADING", Toast.LENGTH_SHORT).show()
         }
     }
 
@@ -220,6 +219,8 @@ fun LoginPage(
                                 nim = input
                             },
                             keyboardType = KeyboardType.Number,
+                            modifier = Modifier.fillMaxWidth()
+
                         )
 
                     }
@@ -246,6 +247,14 @@ fun LoginPage(
                             passwordVisible = passwordVisible,
                             modifiers = Modifier.fillMaxWidth()
                         )
+                        Text(
+                            text = errorMessage,
+                            color = Warna.MerahNormal,
+                            fontSize = 15.sp,
+                            fontWeight = FontWeight.Normal,
+                            modifier = Modifier.fillMaxWidth().padding(bottom = 8.dp)
+                        )
+
                     }
                 }
 

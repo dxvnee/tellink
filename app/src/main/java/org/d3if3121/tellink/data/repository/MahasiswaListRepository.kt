@@ -46,7 +46,7 @@ class MahasiswaListRepository (
             val id = mahasiswaRef.add(mahasiswa).await().id
             Response.Success(id)
         } else {
-            Response.Failure(Exception("NIM sudah terdaftar"))
+            Response.Failure(Exception("NIM already registered."))
         }
 
     } catch (e: Exception){
@@ -102,16 +102,13 @@ class MahasiswaListRepository (
         if (!docmahasiswa.isEmpty){
             val mahasiswa = docmahasiswa.documents[0].toMahasiswa()
 
-            Log.d("TES", mahasiswa.toString())
-
             if (mahasiswa.password == password){
                 Response.Success(mahasiswa)
-
             } else {
-                Response.Failure(Exception("Incorrect Password"))
+                Response.Failure(Exception("Incorrect Password."))
             }
         } else {
-            Response.Failure(Exception("Mahasiswa Tidak Ada"))
+            Response.Failure(Exception("NIM doesn't exist."))
         }
     } catch (e: Exception){
         Response.Failure(e)
