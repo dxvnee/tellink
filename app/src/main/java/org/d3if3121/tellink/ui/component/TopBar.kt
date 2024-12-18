@@ -128,7 +128,7 @@ fun TopBar(
                         modifier = Modifier.fillMaxWidth()
                     ) {
                         Column (
-                            modifier = Modifier
+                            modifier = Modifier.padding(end = 9.dp)
                         ){
                             Image(
                                 painter = painterResource(id = R.drawable.photo),
