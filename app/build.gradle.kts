@@ -30,6 +30,7 @@ android {
     }
     buildFeatures {
         compose = true
+        viewBinding = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.compose.get()
@@ -46,6 +47,7 @@ dependencies {
     implementation(libs.viewmodel.compose)
     //Hilt
     implementation(libs.hilt)
+    implementation(libs.firebase.storage.ktx)
     ksp(libs.hilt.compiler)
     implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
     ksp("androidx.hilt:hilt-compiler:1.1.0")
@@ -58,6 +60,16 @@ dependencies {
     implementation(libs.androidx.navigation.runtime.ktx)
     implementation(libs.androidx.navigation.compose)
 
+    //Cloudinary
+    implementation("androidx.constraintlayout:constraintlayout:2.1.4")
+
+
+    //coil
+    implementation("io.coil-kt:coil-compose:2.7.0")
+
+
+    implementation ("com.github.bumptech.glide:glide:4.15.0")
+    annotationProcessor("com.github.bumptech.glide:compiler:4.15.0")
 
 
 

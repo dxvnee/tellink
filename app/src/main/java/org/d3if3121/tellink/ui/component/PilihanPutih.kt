@@ -1,5 +1,6 @@
 package org.d3if3121.tellink.ui.component
 
+import android.service.notification.Condition
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -20,7 +21,27 @@ import org.d3if3121.tellink.ui.theme.Warna
 
 
 @Composable
-fun PilihanPutih(){
+fun PilihanPutih(
+    text1: String = "Text1",
+    text2: String = "Text1",
+    condition: Boolean = false,
+
+    color1: ButtonColors = ButtonColors(
+        containerColor =  Warna.MerahNormal,
+        contentColor = Warna.PutihNormal,
+        disabledContentColor = Warna.MerahNormal,
+        disabledContainerColor = Warna.PutihNormal
+    ),
+    color2: ButtonColors = ButtonColors(
+        containerColor =  Warna.PutihNormal,
+        contentColor = Warna.MerahNormal,
+        disabledContentColor = Warna.PutihNormal,
+        disabledContainerColor = Warna.MerahNormal
+    ),
+
+    onclick1: () -> Unit = {},
+    onclick2: () -> Unit = {}
+){
     Card(
         modifier = Modifier
             .fillMaxWidth()
@@ -37,17 +58,14 @@ fun PilihanPutih(){
             Button(
                 modifier = Modifier.size(50.dp).fillMaxWidth().weight(1f),
                 shape = RoundedCornerShape(7.dp),
-                colors = ButtonColors(
-                    containerColor =  Warna.MerahNormal,
-                    contentColor = Warna.PutihNormal,
-                    disabledContentColor = Warna.MerahNormal,
-                    disabledContainerColor = Warna.PutihNormal
-                ),
-                onClick = {},
+                colors = color1,
+                onClick = {
+                    onclick1()
+                },
             ) {
                 Text(
-                    text = "Your Project",
-                    color = Warna.PutihNormal,
+                    text = text1,
+                    color = if(condition) Warna.MerahNormal else Warna.PutihNormal,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Bold,
                 )
@@ -55,17 +73,14 @@ fun PilihanPutih(){
             Button(
                 modifier = Modifier.size(50.dp).fillMaxWidth().weight(1f),
                 shape = RoundedCornerShape(7.dp),
-                colors = ButtonColors(
-                    containerColor =  Warna.PutihNormal,
-                    contentColor = Warna.MerahNormal,
-                    disabledContentColor = Warna.PutihNormal,
-                    disabledContainerColor = Warna.MerahNormal
-                ),
-                onClick = {},
+                colors = color2,
+                onClick = {
+                    onclick2()
+                },
             ) {
                 Text(
-                    text = "Recommended",
-                    color = Warna.MerahNormal,
+                    text = text2,
+                    color =if(condition) Warna.PutihNormal else  Warna.MerahNormal,
                     fontSize = 15.sp,
                     fontWeight = FontWeight.Normal,
                 )

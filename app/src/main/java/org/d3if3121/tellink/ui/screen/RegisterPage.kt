@@ -59,6 +59,7 @@ import org.d3if3121.tellink.ui.component.InputPutih
 import org.d3if3121.tellink.data.model.Response.Loading
 import org.d3if3121.tellink.data.model.Response.Success
 import org.d3if3121.tellink.data.model.Response.Failure
+import org.d3if3121.tellink.ui.component.EditMahasiswaDialog
 import org.d3if3121.tellink.ui.theme.Warna
 import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
 
@@ -76,6 +77,7 @@ fun RegisterPage(
     navController: NavHostController,
     viewmodel: MahasiswaListViewModel = hiltViewModel()
 ){
+
     var context = LocalContext.current
 
     var nim by remember { mutableStateOf("") }

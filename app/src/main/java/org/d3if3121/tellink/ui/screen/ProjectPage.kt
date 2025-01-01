@@ -111,11 +111,29 @@ import androidx.compose.material.ContentAlpha
 import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.google.firebase.storage.FirebaseStorage
+import com.google.firebase.storage.StorageReference
+import org.d3if3121.tellink.components.LoadingIndicator
+import org.d3if3121.tellink.core.printError
+import org.d3if3121.tellink.data.model.Mahasiswa
+import org.d3if3121.tellink.data.model.Project
+import org.d3if3121.tellink.data.model.Response.Failure
+import org.d3if3121.tellink.data.model.Response.Loading
+import org.d3if3121.tellink.data.model.Response.Success
 import org.d3if3121.tellink.ui.component.BottomBar
 import org.d3if3121.tellink.ui.component.InputPutihSearch
 import org.d3if3121.tellink.ui.component.KartuKonten
+import org.d3if3121.tellink.ui.component.PilihanPutih
+import org.d3if3121.tellink.ui.component.TambahProjectDialog
 import org.d3if3121.tellink.ui.component.TopBar
 import org.d3if3121.tellink.ui.component.cekScroll
+import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
+import org.d3if3121.tellink.ui.viewmodel.ProjectListViewModel
+import java.time.Duration
+import java.time.LocalDateTime
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
 
 
 @Preview(showBackground = true)
@@ -125,23 +143,83 @@ fun ProjectPagePreview() {
 }
 
 
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
+@Composable
+fun ProjectPage(
+    navController: NavHostController,
+    viewmodel: MahasiswaListViewModel = hiltViewModel(),
+    projectviewmodel: ProjectListViewModel = hiltViewModel()
+) {
+    val lazyListState = rememberLazyListState()
+
+    val user = viewmodel.user
+
+    Scaffold(
+        topBar = {
+            TopBar(lazyListState = lazyListState, helloActive = false, TOP_BAR_ZERO = 70, user = user)
+        },
+        content = { paddingValues ->
+            projectviewmodel.getProjectListByNim(user.nim)
+            when(val projectListByNimResponse = projectviewmodel.projectListByNimResponse){
+                is Loading -> LoadingIndicator()
+                is Success -> projectListByNimResponse.data.let { projectList ->
+                    Column(modifier = Modifier.background(color = Warna.PutihNormal)){
+                        MainContentProject(
+                            lazyListState = lazyListState,
+                            paddingValues = paddingValues,
+                            projectList = projectList!!,
+                            viewmodel = viewmodel,
+                            projectviewmodel = projectviewmodel,
+                            navController = navController
+                        )
+                    }
+                }
+                is Failure -> printError(projectListByNimResponse.e)
+            }
+
+
+        },
+        bottomBar = {
+            BottomBar(navController = navController)
+        }
+    )
+
+
+}
+
+
 
 
 @Composable
 fun MainContentProject(
     lazyListState: LazyListState,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    projectList: List<Project>,
+    viewmodel: MahasiswaListViewModel = hiltViewModel(),
+    projectviewmodel: ProjectListViewModel = hiltViewModel(),
+    navController: NavHostController
 ) {
+    val user = viewmodel.user
     val numbers = remember { List(size = 200){ it } }
     val padding by animateDpAsState(
         targetValue = if (cekScroll(lazyListState)) 0.dp else TOP_BAR_HEIGHT,
         animationSpec = tween(
             durationMillis = 500,
-
-
         )
     )
     var search by remember { mutableStateOf("") }
+    var showDialog = remember { mutableStateOf(false) }
+    var refreshData = remember { mutableStateOf(false) }
+    var secondmode by remember { mutableStateOf(false) }
+
+
+    LaunchedEffect(refreshData) {
+        if (refreshData.value) {
+            projectviewmodel.getProjectList()
+        }
+    }
+
+    TambahProjectDialog(showDialog, refreshData, viewmodel, projectviewmodel)
 
     Column(
         modifier = Modifier.padding(start = 17.dp, end = 17.dp).background(color = Warna.PutihNormal)
@@ -161,6 +239,7 @@ fun MainContentProject(
 
                 )
             }
+
             item {
                 Spacer(modifier = Modifier.height(10.dp))
                 Row(
@@ -193,7 +272,9 @@ fun MainContentProject(
                                 disabledContentColor = Warna.MerahNormal,
                                 disabledContainerColor = Warna.PutihNormal
                             ),
-                            onClick = {},
+                            onClick = {
+                                showDialog.value = true
+                            },
                         ) {
                             Text(
                                 modifier = Modifier.offset(-5.dp),
@@ -208,49 +289,220 @@ fun MainContentProject(
 
                 }
 
-            }
-            items(100){
-                KartuKonten(
-                    fotoprofil = R.drawable.photo,
-                    nama = "Eigiya Daramuli Kale",
-                    jurusan = "D3 Rekayasa Perangkat Lunak Aplikasi",
-                    hari = "5 Days Ago",
-
-                    judul = "MAU NANYA DONGG",
-                    gambar = R.drawable.post1,
-                    konten = "Ini Kenapa kodingan Java aku error " +
-                            "ya guys, tolong bantuannya dong"
+                PilihanPutih(
+                    text1 = "My Project",
+                    text2 = "Requested",
+                    condition = secondmode,
+                    color1 = if(secondmode) {
+                        ButtonColors(
+                            containerColor =  Warna.PutihNormal,
+                            contentColor = Warna.MerahNormal,
+                            disabledContentColor = Warna.MerahNormal,
+                            disabledContainerColor = Warna.MerahNormal
+                        )
+                    } else {
+                        ButtonColors(
+                            containerColor =  Warna.MerahNormal,
+                            contentColor = Warna.MerahNormal,
+                            disabledContentColor = Warna.MerahNormal,
+                            disabledContainerColor = Warna.PutihNormal
+                        )
+                    },
+                    color2 = if(secondmode) {
+                        ButtonColors(
+                            containerColor =  Warna.MerahNormal,
+                            contentColor = Warna.MerahNormal,
+                            disabledContentColor = Warna.MerahNormal,
+                            disabledContainerColor = Warna.MerahNormal
+                        )
+                    } else {
+                        ButtonColors(
+                            containerColor =  Warna.PutihNormal,
+                            contentColor = Warna.MerahNormal,
+                            disabledContentColor = Warna.PutihNormal,
+                            disabledContainerColor = Warna.MerahNormal
+                        )
+                    },
+                    onclick1 = {
+                        secondmode = false
+                    },
+                    onclick2 = {
+                        secondmode = true
+                    }
                 )
-                Spacer(modifier = Modifier.height(20.dp))
+
             }
+            if (projectList.isEmpty()) {
+                item {
+                    Column (
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize().height(550.dp)
+                    ){
+                        Row (
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ){
+                            Text(
+                                text = "Project doesn't exist!",
+                                color = Warna.MerahNormal,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                            )
+                        }
+
+                    }
+                }
+            } else {
+                if(!secondmode){
+                    items(items = projectList){ project ->
+
+                        val mahasiswa = viewmodel.mahasiswaMap[project.nim] ?: Mahasiswa()
+
+                        LaunchedEffect(project.nim) {
+                            viewmodel.getMahasiswaByNim(project.nim)
+                        }
+
+                        KartuKonten(
+                            fotoprofil = R.drawable.photo,
+                            nama = mahasiswa.nama,
+                            jurusan = mahasiswa.jurusan,
+                            hari =  formatRelativeTime(project.date!!),
+                            type = "project",
+                            tag = project.tag,
+                            judul = project.title,
+                            gambar = project.image ?: "",
+                            konten = project.desc,
+                            onclick = {
+                                navController.navigate("${Screen.EditProject.route}/${project.id}")
+                            },
+                            onclicktext = {
+                                navController.navigate("${Screen.ConfirmPage.route}/${project.id}")
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                } else {
+                    Log.d("tes1", user.accept!!.toString())
+                    items(
+                        items = user.accept!!
+
+                    ){ projectId ->
+                        Log.d("tes5", "ererer")
+                        projectviewmodel.getProjectById(projectId)
+
+                        var project by remember { mutableStateOf(Project()) }
+                        var mahasiswa by remember { mutableStateOf(Mahasiswa()) }
+                        var requestornot by remember { mutableStateOf(false) }
+
+                        LaunchedEffect(projectId) {
+                            project = projectviewmodel.getProjectByIdSuspend(projectId)
+
+                            mahasiswa = viewmodel.getMahasiswaByNimSuspend(project.nim)
+
+                            requestornot = viewmodel.checkRequestProject(project.id!!, user.nim).await()
+                        }
+
+                        KartuKonten(
+                            fotoprofil = R.drawable.photo,
+                            nama = mahasiswa.nama,
+                            jurusan = mahasiswa.jurusan,
+                            hari = formatRelativeTime(project.date!!),
+                            type = "accept",
+                            judul = project.title,
+                            gambar = project.image ?: "",
+                            konten = project.desc,
+                            requests = project.requests!!,
+                            tag = project.tag,
+
+                            onclick = {
+
+                            },
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+                    items(
+                        items = user.requests!!
+                    ){ projectId ->
+                        Log.d("tes3", "ererer")
+                        projectviewmodel.getProjectById(projectId)
+                        val project = projectviewmodel.projectMap[projectId] ?: Project()
+                        val mahasiswa = viewmodel.mahasiswaMap[project.nim] ?: Mahasiswa()
+                        var requestornot by remember { mutableStateOf(false) }
+
+                        LaunchedEffect(projectId, project.nim) {
+                            viewmodel.getMahasiswaByNim(project.nim)
+                            projectviewmodel.getProjectById(projectId)
+                            requestornot = viewmodel.checkRequestProject(project.id!!, user.nim).await()
+                        }
+
+                        KartuKonten(
+                            fotoprofil = R.drawable.photo,
+                            nama = mahasiswa.nama,
+                            jurusan = mahasiswa.jurusan,
+                            hari = formatRelativeTime(project.date!!),
+
+                            judul = project.title,
+                            gambar = project.image ?: "",
+                            konten = project.desc,
+                            request = requestornot,
+                            requests = project.requests!!,
+                            tag = project.tag,
+                            onrequestchangefalse = {
+                                requestornot = false
+                            },
+                            onrequestchangetrue = {
+                                requestornot = true
+
+                            },
+                            onclick = {
+                                projectviewmodel.addRequest(project.id!!, user.nim)
+                            },
+                            onclickcancel = {
+                                projectviewmodel.deleteRequest(project.id!!, user.nim)
+                            }
+                        )
+
+                        Spacer(modifier = Modifier.height(20.dp))
+                    }
+
+                }
+
+
+            }
+
 
         }
     }
 
 }
+fun formatRelativeTime(dateTimeString: String): String {
+    if (dateTimeString == "") {
+        return "unknown time"
+    } else {
+        val formatter = DateTimeFormatter.ISO_DATE_TIME
+        val parsedDateTime = LocalDateTime.parse(dateTimeString, formatter)
 
+        val now = LocalDateTime.now(ZoneId.systemDefault())
+        val duration = Duration.between(parsedDateTime, now)
 
-
-
-@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
-@Composable
-fun ProjectPage(
-    navController: NavHostController
-) {
-    val lazyListState = rememberLazyListState()
-
-    Scaffold(
-        topBar = {
-            TopBar(lazyListState = lazyListState, helloActive = false, TOP_BAR_ZERO = 100)
-        },
-        content = { paddingValues ->
-            MainContentProject(lazyListState = lazyListState, paddingValues = paddingValues)
-        },
-        bottomBar = {
-            BottomBar(navController = navController)
+        return when {
+            duration.toMinutes() < 1 -> "just now"
+            duration.toHours() < 1 -> "${duration.toMinutes()} minutes ago"
+            duration.toDays() < 1 -> "${duration.toHours()} hours ago"
+            duration.toDays() < 7 -> "${duration.toDays()} days ago"
+            duration.toDays() < 30 -> "${duration.toDays() / 7} weeks ago"
+            duration.toDays() < 365 -> "${duration.toDays() / 30} months ago"
+            else -> "${duration.toDays() / 365} years ago"
         }
-    )
+    }
 
 
 }
+
+
+
+
 

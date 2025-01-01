@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import org.d3if3121.tellink.R
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
@@ -115,12 +116,17 @@ import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 import org.d3if3121.tellink.components.LoadingIndicator
 import org.d3if3121.tellink.core.printError
 import org.d3if3121.tellink.data.model.Mahasiswa
+import org.d3if3121.tellink.data.model.Project
 import org.d3if3121.tellink.data.model.Response.Success
 import org.d3if3121.tellink.data.model.Response.Loading
 import org.d3if3121.tellink.data.model.Response.Failure
@@ -131,6 +137,7 @@ import org.d3if3121.tellink.ui.component.KartuKonten
 import org.d3if3121.tellink.ui.component.TopBar
 import org.d3if3121.tellink.ui.component.cekScroll
 import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
+import org.d3if3121.tellink.ui.viewmodel.ProjectListViewModel
 
 
 @Preview(showBackground = true)
@@ -140,7 +147,7 @@ fun HomePagePreview() {
 }
 
 
-val TOP_BAR_HEIGHT = 50.dp
+val TOP_BAR_HEIGHT = 70.dp
 
 
 
@@ -148,7 +155,8 @@ val TOP_BAR_HEIGHT = 50.dp
 @Composable
 fun HomePage(
     navController: NavHostController,
-    viewModel: MahasiswaListViewModel = hiltViewModel()
+    viewModel: MahasiswaListViewModel = hiltViewModel(),
+    projectviewmodel: ProjectListViewModel = hiltViewModel()
 ) {
     val lazyListState = rememberLazyListState()
     var user = viewModel.user
@@ -160,29 +168,33 @@ fun HomePage(
             TopBar(lazyListState = lazyListState, helloActive = true, navController = navController, user = user)
         },
         content = { paddingValues ->
-            when(val mahasiswaListResponse = viewModel.mahasiswaListResponse){
+            projectviewmodel.getProjectListUser(user.nim)
+            when(val projectListUserResponse = projectviewmodel.projectListUserResponse){
                 is Loading -> LoadingIndicator()
-                is Success -> mahasiswaListResponse.data.let { mahasiswaList ->
-                    if (mahasiswaList!!.isEmpty()) {
+                is Success -> projectListUserResponse.data.let { projectList ->
 
-                    } else {
-                        Log.d("HASILNYA", mahasiswaList.toString())
+                        Log.d("HASILNYA", projectList.toString())
                         Column(modifier = Modifier.background(color = Warna.PutihNormal)){
                             MainContentHome(
                                 navController = navController,
                                 lazyListState = lazyListState,
                                 paddingValues = paddingValues,
-
-                                mahasiswaList = mahasiswaList
+                                viewmodel = viewModel,
+                                projectviewmodel = projectviewmodel,
+                                projectList = projectList!!,
+                                user = user
                             )
                         }
-                    }
+
                 }
-                is Failure -> printError(mahasiswaListResponse.e)
+                is Failure -> printError(projectListUserResponse.e)
             }
+
         },
         bottomBar = {
-            BottomBar(navController = navController)
+            BottomBar(navController = navController, home = true){
+//                viewModel.markProject(user.nim)
+            }
         },
         contentColor = Warna.PutihNormal
     )
@@ -194,9 +206,35 @@ fun MainContentHome(
     navController: NavHostController,
     lazyListState: LazyListState,
     paddingValues: PaddingValues,
-    mahasiswaList: List<Mahasiswa>,
-    viewModel: MahasiswaListViewModel = hiltViewModel()
+    viewmodel: MahasiswaListViewModel,
+    projectviewmodel: ProjectListViewModel,
+    projectList: List<Project>,
+    viewModel: MahasiswaListViewModel = hiltViewModel(),
+    user: Mahasiswa
 ) {
+
+    var context = LocalContext.current
+    var request = remember { mutableStateOf(false) }
+    when(val addRequestResponse = projectviewmodel.addRequestResponse){
+        is Loading -> {
+
+        }
+        is Success -> {
+            Toast.makeText(context, "Request Success!", Toast.LENGTH_SHORT).show()
+            projectviewmodel.resetAddRequestResponse()
+        }
+        is Failure -> printError(addRequestResponse.e)
+    }
+    when(val deleteRequestResponse = projectviewmodel.deleteRequestResponse){
+        is Loading -> {
+
+        }
+        is Success -> {
+            Toast.makeText(context, "Request Cancelled.", Toast.LENGTH_SHORT).show()
+            projectviewmodel.resetDeleteRequestResponse()
+        }
+        is Failure -> printError(deleteRequestResponse.e)
+    }
 
 
     val numbers = remember { List(size = 200){ it } }
@@ -207,6 +245,7 @@ fun MainContentHome(
             )
     )
     var search by remember { mutableStateOf("") }
+
 
     Column(
         modifier = Modifier.padding(start = 17.dp, end = 17.dp)
@@ -235,38 +274,92 @@ fun MainContentHome(
                     modifier = Modifier.fillMaxWidth().padding(bottom = 17.dp)
 
                 ){
-                    InputPutihSearch(
-                        input = search,
-                        placeholder = stringResource(id = R.string.search),
-                        onInputChange = { input ->
-                            search = input
-                        },
-                        keyboardType = KeyboardType.Number,
-                        modifier = Modifier.fillMaxWidth()
-                    )
+//                    InputPutihSearch(
+//                        input = search,
+//                        placeholder = stringResource(id = R.string.search),
+//                        onInputChange = { input ->
+//                            search = input
+//                        },
+//                        keyboardType = KeyboardType.Number,
+//                        modifier = Modifier.fillMaxWidth()
+//                    )
                 }
             }
-            items(
-                items = mahasiswaList,
-                key = { mahasiswa ->
-                    mahasiswa.nim.orEmpty()
-                }
-            ){ mahasiswa ->
-                KartuKonten(
-                    fotoprofil = R.drawable.photo,
-                    nama = mahasiswa.nama ?: "Invalid",
-                    jurusan = mahasiswa.jurusan ?: "Invalid",
-                    hari = "5 Days Ago",
+            if (projectList.isEmpty()) {
+                item {
+                    Column(
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        modifier = Modifier.fillMaxSize().height(550.dp)
+                    ) {
+                        Row(
+                            verticalAlignment = Alignment.CenterVertically,
+                            horizontalArrangement = Arrangement.Center
+                        ) {
+                            Text(
+                                text = "You're up to date!",
+                                color = Warna.MerahNormal,
+                                fontSize = 15.sp,
+                                fontWeight = FontWeight.Normal,
+                            )
+                        }
 
-                    judul = "MAU NANYA DONGG",
-                    gambar = R.drawable.post1,
-                    konten = "Ini Kenapa kodingan Java aku error " +
-                            "ya guys, tolong bantuannya dong"
-                )
-                Spacer(modifier = Modifier.height(20.dp))
+                    }
+                }
+            } else {
+                items(
+                    items = projectList,
+                ){ project ->
+                    val mahasiswa = viewmodel.mahasiswaMap[project.nim] ?: Mahasiswa()
+                    var requestornot by remember { mutableStateOf(false) }
+
+                    LaunchedEffect(project.id, user.nim) {
+                        requestornot = viewmodel.checkRequestProject(project.id!!, user.nim).await()
+                    }
+
+
+                    LaunchedEffect(project.nim) {
+                        viewmodel.getMahasiswaByNim(project.nim)
+                        viewmodel.addViewedProject(project.id!!)
+
+                    }
+
+                    KartuKonten(
+                        fotoprofil = R.drawable.photo,
+                        nama = mahasiswa.nama,
+                        jurusan = mahasiswa.jurusan,
+                        hari = formatRelativeTime(project.date!!),
+
+                        judul = project.title,
+                        gambar = project.image ?: "",
+                        konten = project.desc,
+                        request = requestornot,
+                        requests = project.requests!!,
+                        tag = project.tag,
+                        onrequestchangefalse = {
+                            requestornot = false
+
+                        },
+                        onrequestchangetrue = {
+                            requestornot = true
+
+                        },
+                        onclick = {
+                            projectviewmodel.addRequest(project.id!!, user.nim)
+                        },
+                        onclickcancel = {
+                            projectviewmodel.deleteRequest(project.id!!, user.nim)
+                        }
+                    )
+                    Spacer(modifier = Modifier.height(20.dp))
+                }
             }
+
+
 
         }
     }
 
 }
+
+

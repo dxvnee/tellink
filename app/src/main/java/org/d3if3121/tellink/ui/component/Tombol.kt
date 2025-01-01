@@ -4,6 +4,7 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.IconButton
 import androidx.compose.runtime.Composable
@@ -34,6 +35,10 @@ fun ButtonMerah(
     onClick: () -> Unit,
     content: @Composable () -> Unit,
     modifier: Modifier,
+    colors: ButtonColors = ButtonDefaults.buttonColors(
+        containerColor =  Warna.MerahNormal,
+        contentColor =  Warna.PutihNormal
+    )
 ){
     Button(
         onClick = onClick,
@@ -42,9 +47,6 @@ fun ButtonMerah(
         content = {
             content()
         },
-        colors = ButtonDefaults.buttonColors(
-            containerColor =  Warna.MerahNormal,
-            contentColor =  Warna.PutihNormal
-        )
+        colors = colors
     )
 }

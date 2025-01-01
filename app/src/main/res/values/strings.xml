@@ -27,6 +27,32 @@
     <string name="why">Why Telkom University Link?</string>
     <string name="facts">Telkom University Facts:</string>
     <string name="search">Search posts...</string>
+    <string name="search_tag">Search tag...</string>
     <string name="request">+ Request</string>
+    <string name="cancel">- Cancel</string>
     <string name="konten_why">“Telkom University Link is made spesific for Telkom University student, it can provide you lots of knownledge and experience with our features, no need to worry about your career we can discuss it here.”</string>
+
+
+    //Profile
+    <string name="edit">Edit</string>
+    <string name="accepted">Accepted!</string>
+    <string name="acc">+</string>
+    <string name="kick">-</string>
+    <string name="chat">Chat</string>
+    <string name="requested"> People requested to join this project..</string>
+    <string name="major">Major:</string>
+    <string name="enter_major">Enter major here:</string>
+
+    //Project
+    <string name="title">Title:</string>
+    <string name="enter_title">Enter title here:</string>
+    <string name="desc">Description:</string>
+    <string name="upload_image">Image: </string>
+    <string name="tags">Tags: </string>
+    <string name="enter_desc">Write your description:</string>
+    <string name="edit_title">Edit Title:</string>
+    <string name="edit_desc">Edit Desc:</string>
+
+
+
 </resources>

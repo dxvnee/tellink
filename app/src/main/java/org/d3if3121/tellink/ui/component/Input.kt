@@ -1,12 +1,14 @@
 package org.d3if3121.tellink.ui.component
 
 import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -42,10 +44,10 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.max
 import androidx.compose.ui.unit.sp
 import org.d3if3121.tellink.R
 import org.d3if3121.tellink.ui.theme.Warna
-
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -54,14 +56,15 @@ fun InputPutih(
     placeholder: String,
     onInputChange: (String) -> Unit,
     keyboardType: KeyboardType,
-    modifier: Modifier = Modifier
-){
+    modifier: Modifier = Modifier,
+    expand: Boolean = false,
+) {
     var isFocused by remember { mutableStateOf(false) }
+
     OutlinedTextField(
         value = input,
         onValueChange = onInputChange,
         placeholder = {
-
             Text(
                 text = placeholder,
                 color = Warna.AbuTua,
@@ -72,7 +75,11 @@ fun InputPutih(
         },
         shape = RoundedCornerShape(10.dp),
         modifier = modifier
-            .height(50.dp)
+            .fillMaxWidth()
+            .heightIn(
+                max = if(expand) Int.MAX_VALUE.dp else 50.dp,
+                min = if(expand) 180.dp else 50.dp
+            )
             .onFocusChanged { focusState ->
                 isFocused = focusState.isFocused
             },
@@ -85,11 +92,12 @@ fun InputPutih(
             focusedContainerColor = if (isFocused) Warna.PutihNormal else Warna.AbuMuda,
             unfocusedContainerColor = if (isFocused) Warna.PutihNormal else Warna.AbuMuda
         ),
-
         keyboardOptions = KeyboardOptions.Default.copy(keyboardType = keyboardType),
-
-        )
+        maxLines = if(expand) Int.MAX_VALUE else 1,
+        minLines = 1,
+    )
 }
+
 
 @Composable
 fun InputPutihSearchProfile(
@@ -159,7 +167,6 @@ fun InputPutihSearchProfile(
 
     }
 }
-@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun InputPutihSearch(
     input: String,
@@ -167,16 +174,18 @@ fun InputPutihSearch(
     onInputChange: (String) -> Unit,
     keyboardType: KeyboardType,
     modifier: Modifier = Modifier,
-    fontSize: Int = 17
+    iconModifier: Modifier = Modifier,
+    fontSize: Int = 17,
 ){
     var isFocused by remember { mutableStateOf(false) }
     OutlinedTextField(
         leadingIcon = {
             Icon(
-                modifier = Modifier.size(25.dp),
+                modifier = iconModifier.size(25.dp),
                 imageVector = Icons.Default.Search,
                 contentDescription = "eheh",
-                tint = Warna.AbuTua
+                tint = Warna.AbuTua,
+
             )
         },
         textStyle = TextStyle(
