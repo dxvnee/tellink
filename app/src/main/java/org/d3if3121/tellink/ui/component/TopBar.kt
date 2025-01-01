@@ -65,8 +65,6 @@ fun TopBar(
 
     val currentUser = user ?: Mahasiswa()
 
-    Log.d("usersekarang", currentUser.toString())
-
     if (profileActive == true){
 
         TopAppBar(
@@ -95,16 +93,16 @@ fun TopBar(
                     Column (
 
                     ){
-                        InputPutihSearchProfile(
-                            input = search,
-                            placeholder = stringResource(id = R.string.search),
-                            onInputChange = onSearchChange,
-                            keyboardType = KeyboardType.Text,
-                            modifier = Modifier.fillMaxWidth()
-                                .padding( end = 17.dp).height(40.dp),
-                            fontSize = 15
-
-                        )
+//                        InputPutihSearchProfile(
+//                            input = search,
+//                            placeholder = stringResource(id = R.string.search),
+//                            onInputChange = onSearchChange,
+//                            keyboardType = KeyboardType.Text,
+//                            modifier = Modifier.fillMaxWidth()
+//                                .padding( end = 17.dp).height(40.dp),
+//                            fontSize = 15
+//
+//                        )
                     }
 
 
@@ -116,12 +114,14 @@ fun TopBar(
             ),
             modifier = Modifier
                 .background(color = Warna.PutihNormal).padding(top = 0.dp)
-                .height(height = 100.dp)
+
         )
     } else {
         TopAppBar(
             title = {
-                Column() {
+                Column(
+                    modifier = Modifier.padding(top = 7.dp)
+                ) {
                     Row(
                         horizontalArrangement = Arrangement.Start,
                         verticalAlignment = Alignment.CenterVertically,
@@ -181,18 +181,18 @@ fun TopBar(
                             horizontalArrangement = Arrangement.End,
                             modifier = Modifier.fillMaxWidth()
                         ){
-                            TombolGambar(
-                                painterResource(id = R.drawable.notifications),
-                                26
-                            ){
-
-                            }
-                            TombolGambar(
-                                painterResource(id = R.drawable.chat),
-                                26
-                            ){
-                                navController.navigate(Screen.Login.route)
-                            }
+//                            TombolGambar(
+//                                painterResource(id = R.drawable.notifications),
+//                                26
+//                            ){
+//
+//                            }
+//                            TombolGambar(
+//                                painterResource(id = R.drawable.chat),
+//                                26
+//                            ){
+//                                navController.navigate(Screen.Login.route)
+//                            }
                         }
 
                     }

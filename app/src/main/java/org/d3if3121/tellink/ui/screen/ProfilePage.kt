@@ -99,12 +99,16 @@ import androidx.compose.material.LocalContentColor
 import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.CardElevation
 import androidx.compose.ui.text.style.TextAlign
+import androidx.hilt.navigation.compose.hiltViewModel
 import org.d3if3121.tellink.ui.component.BottomBar
+import org.d3if3121.tellink.ui.component.ButtonMerah
+import org.d3if3121.tellink.ui.component.EditMahasiswaDialog
 import org.d3if3121.tellink.ui.component.KartuProfil
 import org.d3if3121.tellink.ui.component.KartuProfilGambar
 import org.d3if3121.tellink.ui.component.PilihanPutih
 import org.d3if3121.tellink.ui.component.TopBar
 import org.d3if3121.tellink.ui.component.cekScroll
+import org.d3if3121.tellink.ui.viewmodel.MahasiswaListViewModel
 
 
 @Preview(showBackground = true)
@@ -117,9 +121,15 @@ fun ProfilePagePreview() {
 @Composable
 fun MainContentProfile(
     lazyListState: LazyListState,
-    paddingValues: PaddingValues
+    paddingValues: PaddingValues,
+    viewmodel: MahasiswaListViewModel = hiltViewModel()
 ) {
-    val numbers = remember { List(size = 200){ it } }
+    val showDialog = remember { mutableStateOf(false) }
+
+
+    EditMahasiswaDialog(showDialog, viewmodel)
+
+    val currentuser = viewmodel.user
     val padding by animateDpAsState(
         targetValue = if (cekScroll(lazyListState)) 0.dp else TOP_BAR_HEIGHT,
         animationSpec = tween(
@@ -127,6 +137,7 @@ fun MainContentProfile(
         )
     )
     var search by remember { mutableStateOf("") }
+
     LazyColumn(
         modifier = Modifier.padding(top = padding).fillMaxWidth().fillMaxHeight(),
         state = lazyListState
@@ -142,6 +153,7 @@ fun MainContentProfile(
                         modifier = Modifier
                             .fillMaxSize()
                     )
+
                     Card(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -157,6 +169,7 @@ fun MainContentProfile(
                             bottomEnd = 15.dp
                         )
                     ){
+
                         Row (
                             modifier = Modifier.fillMaxWidth()
                         ){
@@ -172,21 +185,21 @@ fun MainContentProfile(
                                     .padding(start = 17.dp, top = 12.dp, bottom = 17.dp, end = 17.dp)
                             ){
                                 Text(
-                                    text = "Eigiya Daramuli Kale",
+                                    text = currentuser.nama,
                                     color = Warna.MerahNormal,
                                     fontSize = 17.sp,
                                     fontWeight = FontWeight.Bold,
 
                                     )
                                 Text(
-                                    text = "6706223121",
+                                    text = currentuser.nim,
                                     color = Warna.HitamNormal,
                                     fontSize = 15.sp,
                                     fontWeight = FontWeight.Bold,
                                 )
 
                                 Text(
-                                    text = "D3 Rekayasa Perangkat Lunak Aplikasi",
+                                    text = currentuser.jurusan,
                                     color = Warna.AbuTua,
                                     fontSize = 13.sp,
                                     fontWeight = FontWeight.Normal,
@@ -197,19 +210,19 @@ fun MainContentProfile(
                                     verticalAlignment = Alignment.Bottom
 
                                 ){
-                                    Text(
-                                        text = "14",
-                                        color = Warna.HitamNormal,
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.Bold,
-                                    )
-
-                                    Text(
-                                        text = " Post",
-                                        color = Warna.HitamNormal,
-                                        fontSize = 15.sp,
-                                        fontWeight = FontWeight.Normal,
-                                    )
+//                                    Text(
+//                                        text = currentuser.totalpost.toString(),
+//                                        color = Warna.HitamNormal,
+//                                        fontSize = 15.sp,
+//                                        fontWeight = FontWeight.Bold,
+//                                    )
+//
+//                                    Text(
+//                                        text = " Post",
+//                                        color = Warna.HitamNormal,
+//                                        fontSize = 15.sp,
+//                                        fontWeight = FontWeight.Normal,
+//                                    )
                                 }
 
 
@@ -231,17 +244,29 @@ fun MainContentProfile(
                         modifier = Modifier
                             .size(100.dp)
                     )
+                    ButtonMerah(
+                        onClick = {
+                            showDialog.value = true
+                        },
+                        modifier = Modifier
+                            .height(36.dp).width(100.dp).padding(top = 5.dp),
+                        content = {
+                            Text(
+                                text = stringResource(id = R.string.edit),
+                                fontWeight = FontWeight.ExtraBold,
+                                fontSize = 17.sp,
+                                color = Warna.PutihNormal
+                            )
+                        }
+                    )
                 }
 
-
-
             }
-
 
             Column(
                 modifier = Modifier.padding(start = 17.dp, end = 17.dp).background(color = Warna.PutihNormal)
             ) {
-                PilihanPutih()
+//                PilihanPutih()
 
 
 
@@ -252,29 +277,29 @@ fun MainContentProfile(
             Column(
                 modifier = Modifier.padding(start = 17.dp, end = 17.dp).background(color = Warna.PutihNormal)
             ){
-                KartuProfilGambar(
-                    fotoprofil = R.drawable.photo,
-                    nama = "Eigiya Daramuli Kale",
-                    jurusan = "D3 Rekayasa Perangkat Lunak Aplikasi",
-                    hari = "5 Days Ago",
-
-                    judul = "Achievement",
-                    gambar = R.drawable.post1,
-                    konten = "Ini Kenapa kodingan Java aku error " +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong"
-                )
-
-                KartuProfil(
-                    judul = "About Me",
-                    konten = "Ini Kenapa kodingan Java aku error " +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong" +
-                            "ya guys, tolong bantuannya dong"
-                )
+//                KartuProfilGambar(
+//                    fotoprofil = R.drawable.photo,
+//                    nama = "Eigiya Daramuli Kale",
+//                    jurusan = "D3 Rekayasa Perangkat Lunak Aplikasi",
+//                    hari = "5 Days Ago",
+//
+//                    judul = "Achievement",
+//                    gambar = R.drawable.post1,
+//                    konten = "Ini Kenapa kodingan Java aku error " +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong"
+//                )
+//
+//                KartuProfil(
+//                    judul = "About Me",
+//                    konten = "Ini Kenapa kodingan Java aku error " +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong" +
+//                            "ya guys, tolong bantuannya dong"
+//                )
 
 
 
@@ -293,22 +318,28 @@ fun MainContentProfile(
 @SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun ProfilePage(
-    navController: NavHostController
+    navController: NavHostController,
+    viewmodel: MahasiswaListViewModel = hiltViewModel()
 ) {
     var search by remember { mutableStateOf("") }
     val lazyListState = rememberLazyListState()
 
+    val user = viewmodel.user
+
     Scaffold(
         topBar = {
-            TopBar(lazyListState = lazyListState, helloActive = false, profileActive = true,
-                search = search,
-                onSearchChange = {
-                    search = it
-                }
-            )
+//            TopBar(lazyListState = lazyListState, helloActive = false, profileActive = true,
+//                search = search,
+//                onSearchChange = {
+//                    search = it
+//                }
+//            )
+            TopBar(lazyListState = lazyListState, helloActive = false, TOP_BAR_ZERO = 70, user = user)
         },
         content = { paddingValues ->
-            MainContentProfile(lazyListState = lazyListState, paddingValues = paddingValues)
+            Column(modifier = Modifier.background(color = Warna.PutihNormal)) {
+                MainContentProfile(lazyListState = lazyListState, paddingValues = paddingValues, viewmodel = viewmodel)
+            }
         },
         bottomBar = {
             BottomBar(navController = navController)

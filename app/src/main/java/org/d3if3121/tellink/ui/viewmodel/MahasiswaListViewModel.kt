@@ -6,13 +6,23 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.google.firebase.Firebase
+import com.google.firebase.firestore.FieldValue
+import com.google.firebase.firestore.firestore
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import org.d3if3121.tellink.data.model.Mahasiswa
+import org.d3if3121.tellink.data.model.MahasiswaEdit
 import org.d3if3121.tellink.data.model.MahasiswaLogin
 import org.d3if3121.tellink.data.model.Response
 import org.d3if3121.tellink.data.repository.interfaces.AddMahasiswaResponse
 import org.d3if3121.tellink.data.repository.interfaces.DeleteMahasiswaResponse
+import org.d3if3121.tellink.data.repository.interfaces.MahasiswaByNimResponse
 import org.d3if3121.tellink.data.repository.interfaces.LoginResponse
 import org.d3if3121.tellink.data.repository.interfaces.MahasiswaListInterface
 import org.d3if3121.tellink.data.repository.interfaces.MahasiswaListResponse
@@ -31,12 +41,35 @@ class MahasiswaListViewModel @Inject constructor(
         private set
     var deleteMahasiswaResponse by mutableStateOf<DeleteMahasiswaResponse>(Response.Loading)
         private set
+    var mahasiswaByNimResponse by mutableStateOf<MahasiswaByNimResponse>(Response.Loading)
+        private set
 
     var loginResponse by mutableStateOf<LoginResponse>(Response.Loading)
         private set
 
     var user by mutableStateOf(Mahasiswa())
         private set
+
+    var mahasiswa by mutableStateOf(Mahasiswa())
+        private set
+
+    var mahasiswaMap by mutableStateOf(mapOf<String, Mahasiswa>())
+        private set
+
+    var mahasiswaMapProfile by mutableStateOf(mapOf<String, Mahasiswa>())
+        private set
+
+    var mahasiswaProfile by mutableStateOf(Mahasiswa())
+        private set
+
+    var viewedProjects by mutableStateOf(listOf<String>())
+        private set
+
+
+    fun addViewedProject(projectId: String) {
+        viewedProjects = viewedProjects + projectId // Membuat salinan baru dari List dengan menambah proyek
+    }
+
 
 
     init {
@@ -50,12 +83,49 @@ class MahasiswaListViewModel @Inject constructor(
     }
 
     fun getMahasiswaByNim(nim: String) = viewModelScope.launch {
-        repo.getMahasiswaByNim(nim)
+        if (!mahasiswaMap.containsKey(nim)) {
+            val result = repo.getMahasiswaByNim(nim)
+            mahasiswaMap = mahasiswaMap + (nim to result)
+        }
+        mahasiswa = mahasiswaMap[nim] ?: Mahasiswa()
     }
+
+    suspend fun getMahasiswaByNimSuspend(nim: String): Mahasiswa {
+        return withContext(Dispatchers.IO) {
+            if (!mahasiswaMap.containsKey(nim)) {
+                val result = repo.getMahasiswaByNim(nim)
+                mahasiswaMap = mahasiswaMap + (nim to result)
+            }
+            // Mengembalikan mahasiswa dari map atau mahasiswa kosong jika tidak ditemukan
+            mahasiswaMap[nim] ?: Mahasiswa()
+        }
+    }
+
+    fun getMahasiswaByNimProfile(nim: String) = viewModelScope.launch {
+        if (!mahasiswaMap.containsKey(nim)) {
+            val result = repo.getMahasiswaByNim(nim)
+            mahasiswaMapProfile = mahasiswaMapProfile + (nim to result)
+        }
+        mahasiswaProfile = mahasiswaMapProfile[nim] ?: Mahasiswa()
+    }
+
+    fun markProject(nim: String) = viewModelScope.launch {
+        repo.markProject(nim, viewedProjects)
+    }
+
+
 
     fun addUser(mahasiswa: Mahasiswa) {
         user = mahasiswa
         Log.d("CURRENTUSER", user.toString())
+    }
+
+    fun editUser(nama: String, jurusan: String){
+        user = user.copy(
+            nama = nama,
+            jurusan = jurusan
+        )
+        updateMahasiswaResponse = Response.Loading
     }
 
     fun addMahasiswa(mahasiswa: Mahasiswa) = viewModelScope.launch {
@@ -66,14 +136,17 @@ class MahasiswaListViewModel @Inject constructor(
         loginResponse = repo.loginMahasiswa(response.nim, response.password)
     }
 
-    fun updateMahasiswa(mahasiswa: Mahasiswa) = viewModelScope.launch {
+    fun updateMahasiswa(mahasiswa: MahasiswaEdit) = viewModelScope.launch {
         updateMahasiswaResponse = repo.updateMahasiswa(mahasiswa)
+
     }
     fun deleteMahasiswa(id: String) = viewModelScope.launch {
         deleteMahasiswaResponse = repo.deleteMahasiswa(id)
     }
 
-
+    fun checkRequestProject(id: String, nim: String): Deferred<Boolean> = viewModelScope.async {
+        repo.checkRequestProject(id, nim)
+    }
 
 
 }
