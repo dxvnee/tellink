@@ -19,6 +19,7 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.channels.awaitClose
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.callbackFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.tasks.await
 import org.d3if3121.tellink.data.model.Mahasiswa
@@ -63,6 +64,42 @@ class ProjectListRepository (
             listener.remove()
         }
     }
+
+    override fun getRequestList(nim: String) = callbackFlow {
+        val listener = mahasiswaRef.whereEqualTo("nim", nim)
+            .addSnapshotListener { snapshot, e ->
+                if (e != null) {
+                    trySend(Response.Failure(e)).isSuccess
+                    return@addSnapshotListener
+                }
+
+                if (snapshot != null && !snapshot.isEmpty) {
+                    val projectList = mutableListOf<Project>()
+                    val tasks = snapshot.documents.map { document ->
+                        val requestId = document.getString("request") ?: return@map
+                        projectRef.document(requestId).get()
+                            .addOnSuccessListener { projectDoc ->
+                                val projectData = projectDoc.toProject()
+                                val updatedProject = projectData.copy(image = document.getString("image") ?: "")
+                                projectList.add(updatedProject)
+                                if (projectList.size == snapshot.documents.size) {
+                                    trySend(Response.Success(projectList)).isSuccess
+                                }
+                            }
+                            .addOnFailureListener { exception ->
+                                trySend(Response.Failure(exception)).isSuccess
+                            }
+                    }
+                } else {
+                    trySend(Response.Success(emptyList<Project>())).isSuccess
+                }
+            }
+
+        awaitClose {
+            listener.remove()
+        }
+    }
+
 
 
 

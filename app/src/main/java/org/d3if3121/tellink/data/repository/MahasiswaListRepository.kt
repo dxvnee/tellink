@@ -44,8 +44,27 @@ class MahasiswaListRepository (
         }
     }
 
-    override suspend fun addMahasiswa(mahasiswa: Mahasiswa) = try {
 
+    override fun addUser(mahasiswa: Mahasiswa) = callbackFlow {
+        val listener = mahasiswaRef.whereEqualTo("nim", mahasiswa.nim)
+            .addSnapshotListener { snapshot, e ->
+                if (snapshot != null && !snapshot.isEmpty) {
+                    val updatedMahasiswa = snapshot.documents.first().toMahasiswa()
+                    trySend(Response.Success(updatedMahasiswa))
+                } else if (e != null) {
+                    trySend(Response.Failure(e))
+                } else {
+                    trySend(Response.Failure(Exception("User not found!")))
+                }
+            }
+
+        awaitClose {
+            listener.remove()
+        }
+    }
+
+
+    override suspend fun addMahasiswa(mahasiswa: Mahasiswa) = try {
         val mahasiswaSama = mahasiswaRef.whereEqualTo("nim", mahasiswa.nim).get().await()
 
         if (mahasiswaSama.isEmpty){
@@ -54,7 +73,6 @@ class MahasiswaListRepository (
         } else {
             Response.Failure(Exception("NIM already registered."))
         }
-
     } catch (e: Exception){
         Response.Failure(e)
     }
