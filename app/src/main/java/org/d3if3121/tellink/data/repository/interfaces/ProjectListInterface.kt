@@ -20,6 +20,7 @@ interface ProjectListInterface {
     fun getProjectList(): Flow<ProjectListResponse>
     fun getProjectListByNim(nim: String): Flow<ProjectListByNimResponse>
     fun getProjectListUser(id: String): Flow<ProjectListUserResponse>
+    fun getRequestList(nim: String): Flow<ProjectListUserResponse>
 
     suspend fun addProject(project: Project): AddProjectResponse
     suspend fun updateProject(projectId: String, project: Project): UpdateProjectResponse

@@ -16,6 +16,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import okhttp3.internal.wait
 import org.d3if3121.tellink.data.model.Mahasiswa
 import org.d3if3121.tellink.data.model.MahasiswaEdit
 import org.d3if3121.tellink.data.model.MahasiswaLogin
@@ -82,6 +83,21 @@ class MahasiswaListViewModel @Inject constructor(
         }
     }
 
+    fun addUser(mahasiswa: Mahasiswa) = viewModelScope.launch {
+        repo.addUser(mahasiswa).collect { response ->
+            when (val mahasiswaresponse = response) {
+                is Response.Success -> {
+                    user = mahasiswaresponse.data!!
+                    Log.d("CURRENTUSER", "User updated: ${user}")
+                }
+                is Response.Failure -> {
+                    Log.e("CURRENTUSER", "Error: ${mahasiswaresponse.e}")
+                }
+                Response.Loading -> TODO()
+            }
+        }
+    }
+
     fun getMahasiswaByNim(nim: String) = viewModelScope.launch {
         if (!mahasiswaMap.containsKey(nim)) {
             val result = repo.getMahasiswaByNim(nim)
@@ -115,10 +131,7 @@ class MahasiswaListViewModel @Inject constructor(
 
 
 
-    fun addUser(mahasiswa: Mahasiswa) {
-        user = mahasiswa
-        Log.d("CURRENTUSER", user.toString())
-    }
+
 
     fun editUser(nama: String, jurusan: String){
         user = user.copy(

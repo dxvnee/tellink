@@ -9,6 +9,7 @@ import org.d3if3121.tellink.data.model.Response
 
 typealias MahasiswaListResponse = Response<List<Mahasiswa>>
 typealias AddMahasiswaResponse = Response<String>
+typealias AddUserResponse = Response<Mahasiswa>
 typealias UpdateMahasiswaResponse = Response<String>
 typealias DeleteMahasiswaResponse = Response<Void>
 typealias MahasiswaByNimResponse = Response<Mahasiswa>
@@ -19,6 +20,8 @@ interface MahasiswaListInterface {
     fun getMahasiswaList(): Flow<MahasiswaListResponse>
 
     suspend fun addMahasiswa(mahasiswa: Mahasiswa): AddMahasiswaResponse
+    fun addUser(mahasiswa: Mahasiswa): Flow<AddUserResponse>
+
     suspend fun updateMahasiswa(mahasiswa: MahasiswaEdit): UpdateMahasiswaResponse
     suspend fun deleteMahasiswa(id: String): DeleteMahasiswaResponse
 
